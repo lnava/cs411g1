@@ -1,0 +1,224 @@
+10
+
+dir
+53
+file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1/linux-2.6.34.7/arch/m68k
+file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1
+
+
+
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1b86b93b-59e6-4f93-ae39-410b58319674
+
+install.sh
+file
+
+
+
+
+2011-05-12T22:37:31.000000Z
+bba4e5059a32c56d83f23b53e736a44e
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1269
+
+kernel
+dir
+
+sun3x
+dir
+
+Kconfig
+file
+
+
+
+
+2011-05-12T22:37:31.000000Z
+e23db3ad623974a385a58bbdad83d6ee
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+19057
+
+include
+dir
+
+apollo
+dir
+
+configs
+dir
+
+sun3
+dir
+
+hp300
+dir
+
+fpsp040
+dir
+
+bvme6000
+dir
+
+mac
+dir
+
+atari
+dir
+
+mvme147
+dir
+
+tools
+dir
+
+mvme16x
+dir
+
+q40
+dir
+
+Kconfig.debug
+file
+
+
+
+
+2011-05-12T22:37:31.000000Z
+b53db47f43505f0e9068a3ca621304dc
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+59
+
+lib
+dir
+
+ifpsp060
+dir
+
+mm
+dir
+
+math-emu
+dir
+
+Makefile
+file
+
+
+
+
+2011-05-12T22:37:31.000000Z
+17eed2d1144e37ae05b5e56d9d0cd5ce
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3181
+
+amiga
+dir
+

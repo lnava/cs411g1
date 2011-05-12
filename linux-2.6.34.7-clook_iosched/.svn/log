@@ -1,0 +1,108 @@
+<modify-entry
+   name="CREDITS"
+   present-props=""
+   has-prop-mods="false"
+   has-props="false"/>
+<modify-entry
+   committed-rev="1"
+   committed-date="2011-04-08T18:52:44.370225Z"
+   name="CREDITS"
+   last-author="naval"
+   uuid="1b86b93b-59e6-4f93-ae39-410b58319674"/>
+<modify-entry
+   text-time="1970-01-01T00:00:00.000000Z"
+   name="CREDITS"
+   kind="file"
+   deleted="false"
+   working-size="-1"
+   absent="false"
+   revision="53"/>
+<cp-and-translate
+   dest="CREDITS"
+   name=".svn/tmp/text-base/CREDITS.svn-base"/>
+<mv
+   dest=".svn/text-base/CREDITS.svn-base"
+   name=".svn/tmp/text-base/CREDITS.svn-base"/>
+<readonly
+   name=".svn/text-base/CREDITS.svn-base"/>
+<modify-entry
+   name="CREDITS"
+   checksum="a557cfa6f24380c69b3462d32b310edc"/>
+<modify-entry
+   name="CREDITS"
+   text-time="working"/>
+<modify-entry
+   name="CREDITS"
+   working-size="working"/>
+<modify-entry
+   name="README"
+   present-props=""
+   has-prop-mods="false"
+   has-props="false"/>
+<modify-entry
+   committed-rev="1"
+   committed-date="2011-04-08T18:52:44.370225Z"
+   name="README"
+   last-author="naval"
+   uuid="1b86b93b-59e6-4f93-ae39-410b58319674"/>
+<modify-entry
+   text-time="1970-01-01T00:00:00.000000Z"
+   name="README"
+   kind="file"
+   deleted="false"
+   working-size="-1"
+   absent="false"
+   revision="53"/>
+<cp-and-translate
+   dest="README"
+   name=".svn/tmp/text-base/README.svn-base"/>
+<mv
+   dest=".svn/text-base/README.svn-base"
+   name=".svn/tmp/text-base/README.svn-base"/>
+<readonly
+   name=".svn/text-base/README.svn-base"/>
+<modify-entry
+   name="README"
+   checksum="fd6c44326aa39ea6b9b1fc9a72232596"/>
+<modify-entry
+   name="README"
+   text-time="working"/>
+<modify-entry
+   name="README"
+   working-size="working"/>
+<modify-entry
+   name=".mailmap"
+   present-props=""
+   has-prop-mods="false"
+   has-props="false"/>
+<modify-entry
+   committed-rev="1"
+   committed-date="2011-04-08T18:52:44.370225Z"
+   name=".mailmap"
+   last-author="naval"
+   uuid="1b86b93b-59e6-4f93-ae39-410b58319674"/>
+<modify-entry
+   text-time="1970-01-01T00:00:00.000000Z"
+   name=".mailmap"
+   kind="file"
+   deleted="false"
+   working-size="-1"
+   absent="false"
+   revision="53"/>
+<cp-and-translate
+   dest=".mailmap"
+   name=".svn/tmp/text-base/.mailmap.svn-base"/>
+<mv
+   dest=".svn/text-base/.mailmap.svn-base"
+   name=".svn/tmp/text-base/.mailmap.svn-base"/>
+<readonly
+   name=".svn/text-base/.mailmap.svn-base"/>
+<modify-entry
+   name=".mailmap"
+   checksum="c7faa481ef5bc05b5654bb8c7773760b"/>
+<modify-entry
+   name=".mailmap"
+   text-time="working"/>
+<modify-entry
+   name=".mailmap"
+   working-size="working"/>
