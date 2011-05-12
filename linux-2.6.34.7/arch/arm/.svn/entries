@@ -1,0 +1,419 @@
+10
+
+dir
+53
+file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1/linux-2.6.34.7/arch/arm
+file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1
+
+
+
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1b86b93b-59e6-4f93-ae39-410b58319674
+
+mach-mx5
+dir
+
+mach-iop13xx
+dir
+
+mach-realview
+dir
+
+mach-s5pv210
+dir
+
+mach-pnx4008
+dir
+
+mach-ns9xxx
+dir
+
+mach-ixp23xx
+dir
+
+vfp
+dir
+
+mach-u300
+dir
+
+mach-nuc93x
+dir
+
+tools
+dir
+
+mach-msm
+dir
+
+mach-ebsa110
+dir
+
+mach-dove
+dir
+
+boot
+dir
+
+mach-mv78xx0
+dir
+
+plat-s3c24xx
+dir
+
+Makefile
+file
+
+
+
+
+2011-05-12T22:35:55.000000Z
+6b14829da2adf01b68949ced523b62f9
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10540
+
+mach-gemini
+dir
+
+mach-ks8695
+dir
+
+plat-nomadik
+dir
+
+mach-omap1
+dir
+
+include
+dir
+
+mach-stmp37xx
+dir
+
+mach-omap2
+dir
+
+mach-netx
+dir
+
+mach-at91
+dir
+
+mach-integrator
+dir
+
+mach-s3c24a0
+dir
+
+plat-pxa
+dir
+
+mach-bcmring
+dir
+
+mach-iop32x
+dir
+
+mach-s5p6440
+dir
+
+mach-s5p6442
+dir
+
+mach-mxc91231
+dir
+
+mach-kirkwood
+dir
+
+mach-aaec2000
+dir
+
+mach-loki
+dir
+
+mach-w90x900
+dir
+
+mach-ixp2000
+dir
+
+mach-orion5x
+dir
+
+plat-s5pc1xx
+dir
+
+mach-h720x
+dir
+
+mach-shark
+dir
+
+nwfpe
+dir
+
+oprofile
+dir
+
+kernel
+dir
+
+Kconfig
+file
+
+
+
+
+2011-05-12T22:35:55.000000Z
+89733bbad84ba477b2268d1f64237e1a
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+44558
+
+plat-iop
+dir
+
+mach-clps711x
+dir
+
+plat-omap
+dir
+
+mach-iop33x
+dir
+
+mach-lh7a40x
+dir
+
+mach-mmp
+dir
+
+mach-mx25
+dir
+
+mach-s3c2400
+dir
+
+plat-s5p
+dir
+
+lib
+dir
+
+mach-ep93xx
+dir
+
+mach-s3c2440
+dir
+
+mach-s3c2443
+dir
+
+plat-samsung
+dir
+
+plat-stmp3xxx
+dir
+
+mach-stmp378x
+dir
+
+mach-davinci
+dir
+
+plat-orion
+dir
+
+plat-mxc
+dir
+
+mach-ux500
+dir
+
+mach-s3c64xx
+dir
+
+mach-nomadik
+dir
+
+configs
+dir
+
+common
+dir
+
+mach-rpc
+dir
+
+mach-footbridge
+dir
+
+mach-pxa
+dir
+
+mach-s5pc100
+dir
+
+mach-versatile
+dir
+
+mach-s3c2410
+dir
+
+Kconfig.debug
+file
+
+
+
+
+2011-05-12T22:35:55.000000Z
+b8978e53d038a7a943ed0eaf3b69447f
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4642
+
+mach-s3c2412
+dir
+
+mach-shmobile
+dir
+
+mm
+dir
+
+Kconfig-nommu
+file
+
+
+
+
+2011-05-12T22:35:55.000000Z
+d121ffda4bcd7e1f451a884e76d66136
+2011-04-08T18:52:44.370225Z
+1
+naval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1545
+
+mach-ixp4xx
+dir
+
+mach-l7200
+dir
+
+mach-mx1
+dir
+
+mach-sa1100
+dir
+
+mach-mx2
+dir
+
+mach-mx3
+dir
+
