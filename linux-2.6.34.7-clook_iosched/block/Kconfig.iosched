@@ -49,6 +49,13 @@ config DEBUG_CFQ_IOSCHED
 	  Enable CFQ IO scheduling debugging in CFQ. Currently it makes
 	  blktrace output more verbose.
 
+config IOSCHED_CLOOK
+	tristate "CLOOK I/O scheduler"
+	default y
+	---help---
+	  Enable CLOOK I/O scheduling. Implements one way elevator scheduler
+	  servicing requests in numerical order.
+
 choice
 	prompt "Default I/O scheduler"
 	default DEFAULT_CFQ
@@ -65,6 +72,9 @@ choice
 	config DEFAULT_NOOP
 		bool "No-op"
 
+	config DEFAULT_CLOOK
+		bool "CLOOK" if IOSCHED_CLOOK=y
+
 endchoice
 
 config DEFAULT_IOSCHED
@@ -72,6 +82,7 @@ config DEFAULT_IOSCHED
 	default "deadline" if DEFAULT_DEADLINE
 	default "cfq" if DEFAULT_CFQ
 	default "noop" if DEFAULT_NOOP
+	default "clook" if DEFAULT_CLOOK
 
 endmenu
 
