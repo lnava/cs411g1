@@ -46,7 +46,7 @@ static int clook_dispatch(struct request_queue *q, int force)
                 temp_queue = cd->cur_queue;
 		cd->cur_queue = cd->next_queue;
 		cd->next_queue = temp_queue;
-		clook_dispatch(*q, force);
+		clook_dispatch(q, force);
 	}
 	
 	/* Both queues are empty - return 0 */
@@ -56,26 +56,31 @@ static int clook_dispatch(struct request_queue *q, int force)
 static void clook_add_request(struct request_queue *q, struct request *rq)
 {
 	struct clook_data *cd = q->elevator->elevator_data;
+	struct list_head *entry;
 	sector_t req_pos = blk_rq_pos(rq);
 	
 	/* Can the request be serviced on this pass?*/
 	if(req_pos > cd->cur_pos){
 	        
 	        if( list_empty( &cd->cur_queue) )
-		       list_add(rq, &cd->cur_queue.next)
+		       list_add(&rq->queuelist, cd->cur_queue->next);
 		else{
 	               list_for_each(entry, &cd->cur_queue){
-	                     if( blk_rq_pos(entry->next ) > req_pos)
-			             list_add(rq, &cd->cur_queue.next);
+	                     if( blk_rq_pos(list_entry(entry->next, struct request, queuelist)) > req_pos){
+			             list_add(&rq->queuelist, entry->next->queuelist);
+				     goto added;
+			     }
 		       }
 		}
 	}else{ /* Need to service the request on the next pass over the drive. */
 	        if( list_empty(&cd->next_queue) )
-	               list_add(rq, &cd->next_queue.next);
+	               list_add(&rq->queuelist, cd->next_queue.next);
 	        else{
 	               list_for_each(entry, &cd->next_queue){
-	                       if( blk_rq_pos(entry->next) > req_pos )
-	                              list_add(rq, &cd->next_queue.next);
+	                       if( blk_rq_pos(list_entry(entry->next, struct request, queuelist)) > req_pos ){
+	                              list_add(&rq->queuelist, entry->next->queuelist);
+				      goto added;
+			       }
 		       }
 		}
 	}
@@ -85,7 +90,7 @@ static int clook_queue_empty(struct request_queue *q)
 {
 	struct clook_data *cd = q->elevator->elevator_data;
 
-	return (list_empty(&cd->cur_queue) && list_empty(&cd->next_queue);
+	return (list_empty(&cd->cur_queue) && list_empty(&cd->next_queue));
 }
 
 static struct request *
