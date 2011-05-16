@@ -1,238 +1,0 @@
-10
-
-dir
-53
-file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1/linux-2.6.34.7/arch/mips
-file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1
-
-
-
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-1b86b93b-59e6-4f93-ae39-410b58319674
-
-oprofile
-dir
-
-kernel
-dir
-
-Kconfig
-file
-
-
-
-
-2011-05-12T22:40:27.000000Z
-f03943a1351ac7af5c4baa22baadc470
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-53565
-
-alchemy
-dir
-
-mti-malta
-dir
-
-ar7
-dir
-
-sni
-dir
-
-dec
-dir
-
-sgi-ip22
-dir
-
-rb532
-dir
-
-loongson
-dir
-
-sgi-ip27
-dir
-
-pmc-sierra
-dir
-
-boot
-dir
-
-lasat
-dir
-
-cobalt
-dir
-
-nxp
-dir
-
-powertv
-dir
-
-lib
-dir
-
-gt64120
-dir
-
-cavium-octeon
-dir
-
-pci
-dir
-
-fw
-dir
-
-txx9
-dir
-
-Makefile
-file
-
-
-
-
-2011-05-12T22:40:27.000000Z
-33506c93815c12515e477639d39dc212
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-26000
-
-emma
-dir
-
-mipssim
-dir
-
-include
-dir
-
-configs
-dir
-
-bcm63xx
-dir
-
-power
-dir
-
-bcm47xx
-dir
-
-sgi-ip32
-dir
-
-sibyte
-dir
-
-Kconfig.debug
-file
-
-
-
-
-2011-05-12T22:40:27.000000Z
-c95e93b67050a47482ca1c1bf119d000
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-4711
-
-mm
-dir
-
-vr41xx
-dir
-
-math-emu
-dir
-
-jazz
-dir
-
