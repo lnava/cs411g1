@@ -1,14 +1,6 @@
 /*
- * Luke Nava, Jonathan Gill
- * Robert Hickman, Tyler Howe
- *
- * elevator C_Look
- * Modified version of the noop-iosched.c so that the
- * I/O scheduler implements a C_Look algorithm.
- *
- *c_look: Scheduler that dispatches I/O requests
- *        in order of ascending sector number
- *
+ * elevator clook io scheduler
+ * CS411 group 1
  */
 #include <linux/blkdev.h>
 #include <linux/elevator.h>
@@ -18,9 +10,8 @@
 #include <linux/init.h>
 
 struct clook_data {
-	struct list_head cur_queue;
-        struct list_head next_queue;
-        sector_t cur_pos;
+        sector_t cur_head_pos;
+	struct list_head queue;
 };
 
 static void clook_merged_requests(struct request_queue *q, struct request *rq,
@@ -31,123 +22,113 @@ static void clook_merged_requests(struct request_queue *q, struct request *rq,
 
 static int clook_dispatch(struct request_queue *q, int force)
 {
-	struct clook_data *cd = q->elevator->elevator_data;
-
-	/* Dispatch from the current queue */
-	if (!list_empty(&cd->cur_queue)) {
+	struct clook_data *nd = q->elevator->elevator_data;
+	
+	if (!list_empty(&nd->queue)) {
 		struct request *rq;
-		rq = list_entry(cd->cur_queue.next, struct request, queuelist);
+		rq = list_entry(nd->queue.next, struct request, queuelist);
+		nd->cur_head_pos = blk_rq_pos(rq);
+		/* Print out [CLOOK] dsp <direction> <sector> */
+		printk("[CLOOK] dsp <%c> <%lu>", rq_data_dir(rq) ? 'W' : 'R', &nd->cur_head_pos);
 		list_del_init(&rq->queuelist);
-		cd->cur_pos = blk_rq_pos(rq);
 		elv_dispatch_add_tail(q, rq);
 		return 1;
-	}else if(!list_empty(&cd->next_queue)){ /* If we have finished the current queue but not the next queue */
-	        struct list_head temp_queue;
-                temp_queue = cd->cur_queue;
-		cd->cur_queue = cd->next_queue;
-		cd->next_queue = temp_queue;
-		clook_dispatch(q, force);
 	}
-	
-	/* Both queues are empty - return 0 */
 	return 0;
 }
 
 static void clook_add_request(struct request_queue *q, struct request *rq)
 {
-	struct clook_data *cd = q->elevator->elevator_data;
-	struct list_head *entry;
-	sector_t req_pos = blk_rq_pos(rq);
-	
-	/* Can the request be serviced on this pass?*/
-	if(req_pos > cd->cur_pos){
-	        
-	        if( list_empty( &cd->cur_queue) )
-		       list_add(&rq->queuelist, cd->cur_queue->next);
-		else{
-	               list_for_each(entry, &cd->cur_queue){
-	                     if( blk_rq_pos(list_entry(entry->next, struct request, queuelist)) > req_pos){
-			             list_add(&rq->queuelist, entry->next->queuelist);
-				     goto added;
-			     }
-		       }
+	struct clook_data *nd = q->elevator->elevator_data;
+        struct request *entry;
+        sector_t cur_pos = nd->cur_head_pos;
+	sector_t new_pos = blk_rq_pos(rq);
+	/* Print out [CLOOK] add <direction> <sector> */
+	printk("[CLOOK] add <%c> <%lu>", rq_data_dir(rq) ? 'W' : 'R', new_pos);
+	if( new_pos < cur_pos ) {
+
+		sector_t last_loc;
+                
+		entry = list_entry(nd->queue.prev, struct request, queuelist);
+		last_loc = blk_rq_pos(entry);
+		
+		/* Check to see if this is first entry of next trip. */
+		if( last_loc > cur_pos ) {
+                	list_add( &rq->queuelist, nd->queue.prev );	
+		} 
+		else {
+			/* New request cannot be serviced on this trip. */
+			list_for_each_entry_reverse(entry, &nd->queue, queuelist) {
+				
+				sector_t entry_pos = blk_rq_pos(entry);
+
+				if( entry_pos < new_pos ) {
+					list_add( &rq->queuelist, &entry->queuelist );
+					break;
+				}
+			}
 		}
-	}else{ /* Need to service the request on the next pass over the drive. */
-	        if( list_empty(&cd->next_queue) )
-	               list_add(&rq->queuelist, cd->next_queue.next);
-	        else{
-	               list_for_each(entry, &cd->next_queue){
-	                       if( blk_rq_pos(list_entry(entry->next, struct request, queuelist)) > req_pos ){
-	                              list_add(&rq->queuelist, entry->next->queuelist);
-				      goto added;
-			       }
-		       }
+
+	}
+	else {
+		/* Request can be handled on this trip */
+		list_for_each_entry(entry, &nd->queue, queuelist) {
+			
+			sector_t entry_pos = blk_rq_pos(entry);
+
+                	if( entry_pos < new_pos ) {
+                        	list_add( &rq->queuelist, &entry->queuelist );
+				break;
+			}
 		}
 	}
 }
 
 static int clook_queue_empty(struct request_queue *q)
 {
-	struct clook_data *cd = q->elevator->elevator_data;
+	struct clook_data *nd = q->elevator->elevator_data;
 
-	return (list_empty(&cd->cur_queue) && list_empty(&cd->next_queue));
+	return list_empty(&nd->queue);
 }
 
 static struct request *
 clook_former_request(struct request_queue *q, struct request *rq)
 {
-	struct clook_data *cd = q->elevator->elevator_data;
+	struct clook_data *nd = q->elevator->elevator_data;
 
-	if (rq->queuelist.prev == &cd->cur_queue)
+	if (rq->queuelist.prev == &nd->queue)
 		return NULL;
-
-
-	/* If the request starts the next_queue, it's former must be the end of the cur_queue */
-	if (rq->queuelist.prev == &cd->next_queue)
-	        return list_entry(cd->cur_queue.prev, struct request, queuelist);
-	
 	return list_entry(rq->queuelist.prev, struct request, queuelist);
 }
 
 static struct request *
 clook_latter_request(struct request_queue *q, struct request *rq)
 {
-	struct clook_data *cd = q->elevator->elevator_data;
+	struct clook_data *nd = q->elevator->elevator_data;
 
-	if (rq->queuelist.next == &cd->next_queue)
+	if (rq->queuelist.next == &nd->queue)
 		return NULL;
-	
-
-
-	/* If the current request is at the end of the current queue,
-	 * it's latter must be at the beggining of the next_queue */
-	
-	if (rq->queuelist.next == &cd->cur_queue)
-	        return list_entry(cq->next_queue.next, struct request, queuelist);
-
 	return list_entry(rq->queuelist.next, struct request, queuelist);
 }
 
 static void *clook_init_queue(struct request_queue *q)
 {
-	struct clook_data *cd;
+	struct clook_data *nd;
 
-	cd = kmalloc_node(sizeof(*cd), GFP_KERNEL, q->node);
+	nd = kmalloc_node(sizeof(*nd), GFP_KERNEL, q->node);
 	if (!nd)
 		return NULL;
-	INIT_LIST_HEAD(&cd->cur_queue);
-	INIT_LIST_HEAD(&cd->next_queue);
-	cd->cur_pos = 0;
+	INIT_LIST_HEAD(&nd->queue);
+	nd->cur_head_pos = 0;
 	return nd;
 }
 
 static void clook_exit_queue(struct elevator_queue *e)
 {
-	struct clook_data *cd = e->elevator_data;
+	struct clook_data *nd = e->elevator_data;
 
-	BUG_ON(!list_empty(&cd->cur_queue));
-	BUG_ON(!list_empty(&cd->next_queue));
-	kfree(cd);
+	BUG_ON(!list_empty(&nd->queue));
+	kfree(nd);
 }
 
 static struct elevator_type elevator_clook = {
@@ -181,6 +162,6 @@ module_init(clook_init);
 module_exit(clook_exit);
 
 
-MODULE_AUTHOR("Luke Nava");
+MODULE_AUTHOR("CS411g1");
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("clook IO scheduler");
+MODULE_DESCRIPTION("CLook IO scheduler");
