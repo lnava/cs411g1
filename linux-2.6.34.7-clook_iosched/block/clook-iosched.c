@@ -51,6 +51,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	/* Print out [CLOOK] add <direction> <sector> */
 	printk("[CLOOK] add <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', new_pos);
 
+	printk("New request pos: %d, Current Pos: %d\n", new_pos, cur_pos);
 
 	if( new_pos < cur_pos ) {
 
@@ -61,7 +62,8 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 		
 		/* Check to see if this is first entry of next trip. */
 		if( last_loc > cur_pos ) {
-                	list_add( &rq->queuelist, nd->queue.prev );	
+                	list_add( &rq->queuelist, nd->queue.prev );
+			printk("Adding to next trip, less than current head.\n");
 		} 
 		else {
 			/* New request cannot be serviced on this trip. */
@@ -71,7 +73,8 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 
 				if( entry_pos < new_pos ) {
 					list_add( &rq->queuelist, &entry->queuelist );
-					break;
+					printk("Adding after %d and before %d.\n", entry_pos, blk_rq_pos( list_entry( entry->queuelist.next, struct request, queuelist ) ) );
+					goto done;
 				}
 			}
 		}
@@ -85,6 +88,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 
                 	if( entry_pos > new_pos ) {
                         	list_add( &(rq->queuelist), &(entry->queuelist.prev) );
+				printk("Adding after %d and before %d.\n", blk_rq_pos( list_entry( entry->queuelist.prev, struct request, queuelist ) ), entry_pos );
 				goto done;
 			}
 		}
