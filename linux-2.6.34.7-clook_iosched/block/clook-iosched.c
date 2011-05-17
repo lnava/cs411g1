@@ -28,8 +28,12 @@ static int clook_dispatch(struct request_queue *q, int force)
 		struct request *rq;
 		rq = list_entry(nd->queue.next, struct request, queuelist);
 		nd->cur_head_pos = blk_rq_pos(rq);
+
+
 		/* Print out [CLOOK] dsp <direction> <sector> */
-		printk("[CLOOK] dsp <%c> <%lu>", rq_data_dir(rq) ? 'W' : 'R', &nd->cur_head_pos);
+		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', &nd->cur_head_pos);
+
+
 		list_del_init(&rq->queuelist);
 		elv_dispatch_add_tail(q, rq);
 		return 1;
@@ -43,8 +47,11 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
         struct request *entry;
         sector_t cur_pos = nd->cur_head_pos;
 	sector_t new_pos = blk_rq_pos(rq);
+
 	/* Print out [CLOOK] add <direction> <sector> */
-	printk("[CLOOK] add <%c> <%lu>", rq_data_dir(rq) ? 'W' : 'R', new_pos);
+	printk("[CLOOK] add <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', new_pos);
+
+
 	if( new_pos < cur_pos ) {
 
 		sector_t last_loc;
@@ -76,12 +83,15 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 			
 			sector_t entry_pos = blk_rq_pos(entry);
 
-                	if( entry_pos < new_pos ) {
-                        	list_add( &rq->queuelist, &entry->queuelist );
-				break;
+                	if( entry_pos > new_pos ) {
+                        	list_add( &(rq->queuelist), &(entry->queuelist.prev) );
+				goto done;
 			}
 		}
 	}
+
+	/* Used to break out of list_for_each_entry loops */
+	done:
 }
 
 static int clook_queue_empty(struct request_queue *q)
