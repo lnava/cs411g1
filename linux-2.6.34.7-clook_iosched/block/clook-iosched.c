@@ -20,6 +20,14 @@ static void clook_merged_requests(struct request_queue *q, struct request *rq,
 	list_del_init(&next->queuelist);
 }
 
+static int clook_queue_empty(struct request_queue *q)
+{
+	struct clook_data *nd = q->elevator->elevator_data;
+
+	return list_empty(&nd->queue);
+}
+
+
 static int clook_dispatch(struct request_queue *q, int force)
 {
 	struct clook_data *nd = q->elevator->elevator_data;
@@ -31,7 +39,7 @@ static int clook_dispatch(struct request_queue *q, int force)
 
 
 		/* Print out [CLOOK] dsp <direction> <sector> */
-		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', &nd->cur_head_pos);
+		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long)&nd->cur_head_pos);
 
 
 		list_del_init(&rq->queuelist);
@@ -91,29 +99,30 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 			sector_t next_pos;
 			sector_t entry_pos;
 			
+			entry_pos = blk_rq_pos(entry);
+			
 			/* Current entry is end of list. */
-			if( entry->queuelist.next == nd->queue  ) {
+			if( &(entry->queuelist.next) == &(nd->queue) ) {
 				list_add( &(rq->queuelist), &(entry->queuelist) );
-				printk("Adding after %d (EOL).\n", blk_rq_pos( list_entry( entry->queuelist, struct request, queuelist ) ) );
+				printk("Adding after %d (EOL).\n", entry_pos );
                                 break;
 			}
 			
 			next = list_entry(entry->queuelist.next, struct request, queuelist);
 			
-			entry_pos = blk_rq_pos(entry);
 			next_pos = blk_rq_pos(next);
                 	
 			if( ( new_pos > entry_pos ) ) {
 				/* Nominal case. */
 				if ( next_pos > new_pos ) {
 					list_add( &(rq->queuelist), &(entry->queuelist) );
-					printk("Adding after %d and before %d.\n", blk_rq_pos( list_entry( entry->queuelist, struct request, queuelist ) ), next_pos );
+					printk("Adding after %d and before %d.\n", entry_pos, next_pos );
 				        break;
 				}
 				/* Last request for this trip. */
 				else if ( next_pos < entry_pos ) {
 					list_add( &(rq->queuelist), &(entry->queuelist) );
-					printk("Adding after %d and before %d (EOT).\n", blk_rq_pos( list_entry( entry->queuelist, struct request, queuelist ) ), next_pos );
+					printk("Adding after %d and before %d (EOT).\n", entry_pos, next_pos );
 					break;
 				}
 			}
@@ -124,13 +133,6 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 		}
 
 	}
-}
-
-static int clook_queue_empty(struct request_queue *q)
-{
-	struct clook_data *nd = q->elevator->elevator_data;
-
-	return list_empty(&nd->queue);
 }
 
 static struct request *
