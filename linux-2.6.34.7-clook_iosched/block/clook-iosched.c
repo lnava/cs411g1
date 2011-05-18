@@ -58,7 +58,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	/* Print out [CLOOK] add <direction> <sector> */
 	printk("[CLOOK] add <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', new_pos);
 
-	printk("New request pos: %lu, Current Pos: %lu \n", new_pos, (unsigned long)cur_pos);
+	printk("New request pos: %lu, Current Pos: %llu \n", new_pos, (unsigned long long)cur_pos);
         
 	if( clook_queue_empty( q ) ) {
         	list_add( &rq->queuelist, &nd->queue );
