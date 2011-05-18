@@ -20,6 +20,14 @@ static void clook_merged_requests(struct request_queue *q, struct request *rq,
 	list_del_init(&next->queuelist);
 }
 
+static int clook_queue_empty(struct request_queue *q)
+{
+	struct clook_data *nd = q->elevator->elevator_data;
+
+	return list_empty(&nd->queue);
+}
+
+
 static int clook_dispatch(struct request_queue *q, int force)
 {
 	struct clook_data *nd = q->elevator->elevator_data;
@@ -31,7 +39,7 @@ static int clook_dispatch(struct request_queue *q, int force)
 		nd->cur_head_pos += blk_rq_sectors(rq);
 
 		/* Print out [CLOOK] dsp <direction> <sector> */
-		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', &nd->cur_head_pos);
+		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long)&nd->cur_head_pos);
 
 
 		list_del_init(&rq->queuelist);
@@ -51,8 +59,13 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	/* Print out [CLOOK] add <direction> <sector> */
 	printk("[CLOOK] add <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', new_pos);
 
-
-	if( new_pos < cur_pos ) {
+	printk("New request pos: %lu, Current Pos: %lu\n", new_pos, cur_pos);
+        
+	if( clook_queue_empty( q ) ) {
+        	list_add( &rq->queuelist, &nd->queue );
+		printk("Empty List.  Adding current to list.\n");
+	}
+	else if( new_pos < cur_pos ) {
 
 		sector_t last_loc;
                 
@@ -61,7 +74,8 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 		
 		/* Check to see if this is first entry of next trip. */
 		if( last_loc > cur_pos ) {
-                	list_add( &rq->queuelist, nd->queue.prev );	
+                	list_add( &rq->queuelist, nd->queue.prev );
+			printk("First Entry of Next Trip.\n");
 		} 
 		else {
 			/* New request cannot be serviced on this trip. */
@@ -71,6 +85,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 
 				if( entry_pos < new_pos ) {
 					list_add( &rq->queuelist, &entry->queuelist );
+					printk("Adding after %lu and before %lu (NXT).\n", entry_pos, blk_rq_pos( list_entry( entry->queuelist.next, struct request, queuelist ) ) );
 					break;
 				}
 			}
@@ -80,25 +95,44 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	else {
 		/* Request can be handled on this trip */
 		list_for_each_entry(entry, &nd->queue, queuelist) {
+		     	struct request *next;
+			sector_t next_pos;
+			sector_t entry_pos;
 			
-			sector_t entry_pos = blk_rq_pos(entry);
-
-                	if( entry_pos > new_pos ) {
-                        	list_add( &(rq->queuelist), &(entry->queuelist.prev) );
-				goto done;
+			entry_pos = blk_rq_pos(entry);
+			
+			/* Current entry is end of list. */
+			if( &(entry->queuelist.next) == &(nd->queue) ) {
+				list_add( &(rq->queuelist), &(entry->queuelist) );
+				printk("Adding after %lu (EOL).\n", entry_pos );
+                                break;
+			}
+			
+			next = list_entry(entry->queuelist.next, struct request, queuelist);
+			
+			next_pos = blk_rq_pos(next);
+                	
+			if( ( new_pos > entry_pos ) ) {
+				/* Nominal case. */
+				if ( next_pos > new_pos ) {
+					list_add( &(rq->queuelist), &(entry->queuelist) );
+					printk("Adding after %lu and before %lu.\n", entry_pos, next_pos );
+				        break;
+				}
+				/* Last request for this trip. */
+				else if ( next_pos < entry_pos ) {
+					list_add( &(rq->queuelist), &(entry->queuelist) );
+					printk("Adding after %lu and before %lu (EOT).\n", entry_pos, next_pos );
+					break;
+				}
+			}
+			/* Keep iterating; new is greater than next. */
+			else {
+				continue; 
 			}
 		}
+
 	}
-
-	/* Used to break out of list_for_each_entry loops */
-	done:
-}
-
-static int clook_queue_empty(struct request_queue *q)
-{
-	struct clook_data *nd = q->elevator->elevator_data;
-
-	return list_empty(&nd->queue);
 }
 
 static struct request *
