@@ -9,7 +9,7 @@
 #include <linux/slab.h>
 #include <linux/init.h>
 
-sector_t cur_head_pos;
+static sector_t cur_head_pos;
 
 struct clook_data {
 	struct list_head queue;
@@ -39,7 +39,7 @@ static int clook_dispatch(struct request_queue *q, int force)
 		cur_head_pos = blk_rq_pos(rq) + blk_rq_sectors(rq);
 
 		/* Print out [CLOOK] dsp <direction> <sector> */
-		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long)cur_head_pos);
+		printk("[CLOOK] dsp <%c> <%llu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long long)cur_head_pos);
 
 		list_del_init(&rq->queuelist);
 		elv_dispatch_add_tail(q, rq);
@@ -56,9 +56,9 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	sector_t new_pos = blk_rq_pos(rq);
 
 	/* Print out [CLOOK] add <direction> <sector> */
-	printk("[CLOOK] add <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', new_pos);
+	printk("[CLOOK] add <%c> <%llu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long long)new_pos);
 
-	printk("New request pos: %lu, Current Pos: %lu\n", new_pos, cur_pos);
+	printk("New request pos: %llu>, Current Pos: %llu>\n", (unsigned long long)new_pos, (unsigned long long)cur_pos);
         
 	if( clook_queue_empty( q ) ) {
         	list_add( &rq->queuelist, &nd->queue );
@@ -84,7 +84,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 
 				if( entry_pos < new_pos ) {
 					list_add( &rq->queuelist, &entry->queuelist );
-					printk("Adding after %lu and before %lu (NXT).\n", entry_pos, blk_rq_pos( list_entry( entry->queuelist.next, struct request, queuelist ) ) );
+					printk("Adding after %llu> and before %llu> (NXT).\n", (unsigned long long)entry_pos, (unsigned long long)blk_rq_pos( list_entry( entry->queuelist.next, struct request, queuelist ) ) );
 					break;
 				}
 			}
@@ -103,7 +103,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 			/* Current entry is end of list. */
 			if( &(entry->queuelist.next) == &(nd->queue) ) {
 				list_add( &(rq->queuelist), &(entry->queuelist) );
-				printk("Adding after %lu (EOL).\n", entry_pos );
+				printk("Adding after %llu> (EOL).\n", (unsigned long long)entry_pos );
                                 break;
 			}
 			
@@ -115,13 +115,13 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 				/* Nominal case. */
 				if ( next_pos > new_pos ) {
 					list_add( &(rq->queuelist), &(entry->queuelist) );
-					printk("Adding after %lu and before %lu.\n", entry_pos, next_pos );
+					printk("Adding after %llu> and before %llu>.\n", (unsigned long long)entry_pos, (unsigned long long)next_pos );
 				        break;
 				}
 				/* Last request for this trip. */
 				else if ( next_pos < entry_pos ) {
 					list_add( &(rq->queuelist), &(entry->queuelist) );
-					printk("Adding after %lu and before %lu (EOT).\n", entry_pos, next_pos );
+					printk("Adding after %llu> and before %llu> (EOT).\n", (unsigned long long)entry_pos, (unsigned long long)next_pos );
 					break;
 				}
 			}
