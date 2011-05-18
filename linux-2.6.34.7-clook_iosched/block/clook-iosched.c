@@ -1,4 +1,4 @@
-/*
+/*;``
  * elevator clook io scheduler
  * CS411 group 1
  */
@@ -58,7 +58,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	/* Print out [CLOOK] add <direction> <sector> */
 	printk("[CLOOK] add <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', new_pos);
 
-	printk("New request pos: %lu, Current Pos: %lu\n", new_pos, cur_pos);
+	printk("New request pos: %lu, Current Pos: %lu \n", new_pos, cur_pos);
         
 	if( clook_queue_empty( q ) ) {
         	list_add( &rq->queuelist, &nd->queue );
@@ -115,7 +115,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 				/* Nominal case. */
 				if ( next_pos > new_pos ) {
 					list_add( &(rq->queuelist), &(entry->queuelist) );
-					printk("Adding after %lu and before %lu.\n", entry_pos, next_pos );
+					printk("Adding after %lu and before %lu. \n", entry_pos, next_pos );
 				        break;
 				}
 				/* Last request for this trip. */
@@ -162,7 +162,7 @@ static void *clook_init_queue(struct request_queue *q)
 	if (!nd)
 		return NULL;
 	INIT_LIST_HEAD(&nd->queue);
-	cur_head_pos = 0;
+	cur_head_pos = 10;
 	return nd;
 }
 
