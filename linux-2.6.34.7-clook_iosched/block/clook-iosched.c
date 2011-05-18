@@ -28,7 +28,7 @@ static int clook_dispatch(struct request_queue *q, int force)
 		struct request *rq;
 		rq = list_entry(nd->queue.next, struct request, queuelist);
 		nd->cur_head_pos = blk_rq_pos(rq);
-
+		nd->cur_head_pos += blk_rq_sectors(rq);
 
 		/* Print out [CLOOK] dsp <direction> <sector> */
 		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', &nd->cur_head_pos);
