@@ -9,8 +9,9 @@
 #include <linux/slab.h>
 #include <linux/init.h>
 
+sector_t cur_head_pos;
+
 struct clook_data {
-        sector_t cur_head_pos;
 	struct list_head queue;
 };
 
@@ -35,12 +36,10 @@ static int clook_dispatch(struct request_queue *q, int force)
 	if (!list_empty(&nd->queue)) {
 		struct request *rq;
 		rq = list_entry(nd->queue.next, struct request, queuelist);
-		nd->cur_head_pos = blk_rq_pos(rq);
-		nd->cur_head_pos += blk_rq_sectors(rq);
+		cur_head_pos = blk_rq_pos(rq) + blk_rq_sectors(rq);
 
 		/* Print out [CLOOK] dsp <direction> <sector> */
-		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long)nd->cur_head_pos);
-
+		printk("[CLOOK] dsp <%c> <%lu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long)cur_head_pos);
 
 		list_del_init(&rq->queuelist);
 		elv_dispatch_add_tail(q, rq);
@@ -53,7 +52,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 {
 	struct clook_data *nd = q->elevator->elevator_data;
         struct request *entry;
-        sector_t cur_pos = nd->cur_head_pos;
+        sector_t cur_pos = cur_head_pos;
 	sector_t new_pos = blk_rq_pos(rq);
 
 	/* Print out [CLOOK] add <direction> <sector> */
@@ -163,7 +162,7 @@ static void *clook_init_queue(struct request_queue *q)
 	if (!nd)
 		return NULL;
 	INIT_LIST_HEAD(&nd->queue);
-	nd->cur_head_pos = 0;
+	cur_head_pos = 0;
 	return nd;
 }
 
