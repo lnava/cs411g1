@@ -1,6 +1,17 @@
 /*
  * elevator clook io scheduler
- * CS411 group 1
+ * CS411 group 1:
+ * Robert Hickman
+ * Lucas Nava
+ * Jonathan Gill
+ * Tyler Howe
+ *
+ * Changes:
+ * We changed the NOOP scheduler implementation of the FIFO algorithm
+ * into an implementation of the CLOOK scheduling algorithm.
+ * 
+ * The functions we changed were:
+ * clook_dispatch, clook_add_request, clook_init_queue
  */
 #include <linux/blkdev.h>
 #include <linux/elevator.h>
@@ -57,32 +68,43 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
         struct request *entry;
         sector_t cur_pos = cur_head_pos;
 	sector_t new_pos = blk_rq_pos(rq);
+	sector_t first_pos;
 
 	/* Print out [CLOOK] add <direction> <sector> */
 	printk("[CLOOK] add <%c> <%llu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long long)new_pos);
 
+	entry = list_entry(nd->queue.next, struct request, queuelist);
+	first_pos = blk_rq_pos(entry);
+	
 	if( clook_queue_empty( q ) ) {
         	list_add( &rq->queuelist, &nd->queue );
 	}
-	else if( new_pos < cur_pos ) {
+	else if( ( new_pos < cur_pos ) && ( cur_pos < first_pos ) ) {
 
-		sector_t last_loc;
+		sector_t prev_loc;
                 
 		entry = list_entry(nd->queue.prev, struct request, queuelist);
-		last_loc = blk_rq_pos(entry);
+		prev_loc = blk_rq_pos(entry);
+		
 		
 		/* Check to see if this is first entry of next trip. */
-		if( last_loc > cur_pos ) {
+		if( prev_loc >= first_pos ) {
                 	list_add( &rq->queuelist, nd->queue.prev );
 		} 
 		else {
 			/* New request cannot be serviced on this trip. */
 			list_for_each_entry_reverse(entry, &nd->queue, queuelist) {
 				
-				sector_t entry_pos = blk_rq_pos(entry);
+				sector_t entry_loc = blk_rq_pos(entry);
+				
+				prev_loc = blk_rq_pos(list_entry(entry->queuelist.prev, struct request, queuelist));
 
-				if( entry_pos < new_pos ) {
+				if( entry_loc < new_pos ) {
 					list_add( &rq->queuelist, &entry->queuelist );
+					break;
+				}
+				else if( prev_loc > entry_loc ) {
+                                	list_add( &rq->queuelist, &entry->queuelist.prev );
 					break;
 				}
 			}
@@ -90,39 +112,46 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 
 	}
 	else {
-		/* Request can be handled on this trip */
-		list_for_each_entry(entry, &nd->queue, queuelist) {
-		     	struct request *next;
-			sector_t next_pos;
-			sector_t entry_pos;
-			
-			entry_pos = blk_rq_pos(entry);
-			
-			/* Current entry is end of list. */
-			if( &(entry->queuelist.next) == &(nd->queue) ) {
-				list_add( &(rq->queuelist), &(entry->queuelist) );
-                                break;
-			}
-			
-			next = list_entry(entry->queuelist.next, struct request, queuelist);
-			
-			next_pos = blk_rq_pos(next);
-                	
-			if( ( new_pos > entry_pos ) ) {
-				/* Nominal case. */
-				if ( next_pos > new_pos ) {
-					list_add( &(rq->queuelist), &(entry->queuelist) );
-				        break;
-				}
-				/* Last request for this trip. */
-				else if ( next_pos < entry_pos ) {
+		struct request *next;
+		sector_t next_pos;
+		sector_t entry_loc;
+
+		/* Check if less than first element in list. */
+		if( new_pos < first_pos ) {
+			list_add( &rq->queuelist, &nd->queue );
+		}
+		else {
+			/* Request can be handled on this trip */
+			list_for_each_entry(entry, &nd->queue, queuelist) {
+				
+				entry_loc = blk_rq_pos(entry);
+				
+				/* Current entry is end of list. */
+				if( &(entry->queuelist.next) == &(nd->queue) ) {
 					list_add( &(rq->queuelist), &(entry->queuelist) );
 					break;
 				}
-			}
-			/* Keep iterating; new is greater than next. */
-			else {
-				continue; 
+				
+				next = list_entry(entry->queuelist.next, struct request, queuelist);
+				
+				next_pos = blk_rq_pos(next);
+				
+				if( ( new_pos > entry_loc ) ) {
+					/* Nominal case. */
+					if ( next_pos > new_pos ) {
+						list_add( &(rq->queuelist), &(entry->queuelist) );
+						break;
+					}
+					/* Last request for this trip. */
+					else if ( next_pos < entry_loc ) {
+						list_add( &(rq->queuelist), &(entry->queuelist) );
+						break;
+					}
+				}
+				/* Keep iterating; new is greater than next. */
+				else {
+					continue; 
+				}
 			}
 		}
 
