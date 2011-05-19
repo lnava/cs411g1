@@ -1,6 +1,17 @@
 /*
  * elevator clook io scheduler
- * CS411 group 1
+ * CS411 group 1:
+ * Robert Hickman
+ * Lucas Nava
+ * Jonathan Gill
+ * Tyler Howe
+ *
+ * Changes:
+ * We changed the NOOP scheduler implementation of the FIFO algorithm
+ * into an implementation of the CLOOK scheduling algorithm.
+ * 
+ * The functions we changed were:
+ * clook_dispatch, clook_add_request, clook_init_queue
  */
 #include <linux/blkdev.h>
 #include <linux/elevator.h>
