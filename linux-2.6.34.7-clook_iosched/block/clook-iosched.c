@@ -36,10 +36,13 @@ static int clook_dispatch(struct request_queue *q, int force)
 	if (!list_empty(&nd->queue)) {
 		struct request *rq;
 		rq = list_entry(nd->queue.next, struct request, queuelist);
-		cur_head_pos = blk_rq_pos(rq) + blk_rq_sectors(rq);
+		cur_head_pos = blk_rq_pos(rq);
 
 		/* Print out [CLOOK] dsp <direction> <sector> */
 		printk("[CLOOK] dsp <%c> <%llu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long long)cur_head_pos);
+                
+		/* Update disk head position. */
+		cur_head_pos += blk_rq_sectors(rq);
 
 		list_del_init(&rq->queuelist);
 		elv_dispatch_add_tail(q, rq);
@@ -60,7 +63,6 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 
 	if( clook_queue_empty( q ) ) {
         	list_add( &rq->queuelist, &nd->queue );
-		printk("Empty List.  Adding current to list.\n");
 	}
 	else if( new_pos < cur_pos ) {
 
