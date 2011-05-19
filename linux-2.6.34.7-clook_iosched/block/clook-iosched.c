@@ -67,13 +67,18 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	else if( new_pos < cur_pos ) {
 
 		sector_t last_loc;
+		sector_t first_loc;
                 
 		entry = list_entry(nd->queue.prev, struct request, queuelist);
 		last_loc = blk_rq_pos(entry);
 		
+		entry = list_entry(nd->queue.next, struct request, queuelist);
+		first_loc = blk_rq_pos(entry);
+		
 		/* Check to see if this is first entry of next trip. */
-		if( last_loc > cur_pos ) {
+		if( last_loc > first_loc ) {
                 	list_add( &rq->queuelist, nd->queue.prev );
+			printk("Adding to next trip.\n");
 		} 
 		else {
 			/* New request cannot be serviced on this trip. */
