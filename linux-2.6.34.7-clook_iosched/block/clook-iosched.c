@@ -58,8 +58,6 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	/* Print out [CLOOK] add <direction> <sector> */
 	printk("[CLOOK] add <%c> <%llu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long long)new_pos);
 
-	printk("New request pos: %llu>, Current Pos: %llu>\n", (unsigned long long)new_pos, (unsigned long long)cur_pos);
-        
 	if( clook_queue_empty( q ) ) {
         	list_add( &rq->queuelist, &nd->queue );
 		printk("Empty List.  Adding current to list.\n");
@@ -74,7 +72,6 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 		/* Check to see if this is first entry of next trip. */
 		if( last_loc > cur_pos ) {
                 	list_add( &rq->queuelist, nd->queue.prev );
-			printk("First Entry of Next Trip.\n");
 		} 
 		else {
 			/* New request cannot be serviced on this trip. */
@@ -84,7 +81,6 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 
 				if( entry_pos < new_pos ) {
 					list_add( &rq->queuelist, &entry->queuelist );
-					printk("Adding after %llu> and before %llu> (NXT).\n", (unsigned long long)entry_pos, (unsigned long long)blk_rq_pos( list_entry( entry->queuelist.next, struct request, queuelist ) ) );
 					break;
 				}
 			}
@@ -103,7 +99,6 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 			/* Current entry is end of list. */
 			if( &(entry->queuelist.next) == &(nd->queue) ) {
 				list_add( &(rq->queuelist), &(entry->queuelist) );
-				printk("Adding after %llu> (EOL).\n", (unsigned long long)entry_pos );
                                 break;
 			}
 			
@@ -115,13 +110,11 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 				/* Nominal case. */
 				if ( next_pos > new_pos ) {
 					list_add( &(rq->queuelist), &(entry->queuelist) );
-					printk("Adding after %llu> and before %llu>.\n", (unsigned long long)entry_pos, (unsigned long long)next_pos );
 				        break;
 				}
 				/* Last request for this trip. */
 				else if ( next_pos < entry_pos ) {
 					list_add( &(rq->queuelist), &(entry->queuelist) );
-					printk("Adding after %llu> and before %llu> (EOT).\n", (unsigned long long)entry_pos, (unsigned long long)next_pos );
 					break;
 				}
 			}
