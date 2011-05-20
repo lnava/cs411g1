@@ -1,0 +1,230 @@
+commit af537d5a9fbbd93dfbd9255c4922046aad69215d
+Author: cs411 <cs411@cs411vm.(none)>
+Date:   Thu May 19 17:01:50 2011 -0700
+
+    adding the typescript to the repos
+
+commit d1b9bcf2f61955d5ba28e91fd2e67dfb694a6a27
+Merge: 28b8106... c559417...
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu May 19 16:32:34 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into clook
+
+commit 28b8106efa58e870221cefc48099b9f588cea35c
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu May 19 16:32:29 2011 -0700
+
+    Fixed a lot of border cases
+
+commit c559417cdd0fb4b4af731fb37015ff45429caa2b
+Author: Jonathan Gill <puzzledeu@gmail.com>
+Date:   Thu May 19 15:21:53 2011 -0700
+
+    added the comments at the top of the clook_iosched to meet requirements.
+
+commit 63b3f8730e4c717118bb4c3f27d9709f86b59a8e
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu May 19 15:15:19 2011 -0700
+
+    Fixing next trip logic
+
+commit a6130521321d2713507d015827f64d6f229227c0
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Wed May 18 18:32:22 2011 -0700
+
+    Fixed some more print issues.
+
+commit a9ede3a6051a127408e213ed7fa0473a5b3491c4
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Wed May 18 18:14:23 2011 -0700
+
+    Removed debug prints
+
+commit 604490b1ebbb320838e83e5d604ced817966d61f
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Wed May 18 14:47:54 2011 -0700
+
+    changed prints to work correctly
+
+commit 28a117bed08502a076a44ccfd03630edbc93e8ca
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 17 20:18:44 2011 -0700
+
+    changed head position to global variable
+
+commit 8b55728858dc5c0fc5cdba94ce849648a40df56e
+Merge: 8b9355c... c03dfb5...
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 17 19:24:05 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into clook
+
+commit c03dfb553fd0ecc118342266b4eafad38da8c233
+Author: cs411 <cs411@cs411vm.(none)>
+Date:   Tue May 17 18:45:44 2011 -0700
+
+    adding output from our kernel while it is running with clook-iosched
+
+commit 8b9355ce6dfa182cfe2a9a2988e479b78eb9c51e
+Merge: 0da33f7... 0836929...
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 17 18:40:11 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into clook
+
+commit 083692905efa44f32adc29ff01a2ae108c709db5
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 17 18:29:39 2011 -0700
+
+    Fixed print statement in dispatch by removing &
+
+commit dbde289a6e716ea319d8f27abfa0ee9411e46d48
+Merge: 60f08e1... 64e63d0...
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 17 17:32:32 2011 -0700
+
+    Merge remote branch 'origin/clook' into clook
+
+commit 60f08e1f965f26b3beade6b1ab6e60fe3031a405
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 17 17:13:41 2011 -0700
+
+    changed the cur_pos to account for read length of request in dispatch function
+
+commit 0da33f7955fe727c50ae9e1425f31bf4dfd912e8
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 17 17:09:24 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into clook
+
+commit 64e63d0e2c97ae2ede9deca314c2e4660aed07dc
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Tue May 17 17:00:30 2011 -0700
+
+    changed the print statements to unsigned long
+
+commit cfe830f56262d2d794c6ba537e835758fdb85f94
+Merge: 8624bd4... 019e662...
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Tue May 17 16:52:01 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into myBranch
+
+commit 019e66230cfe89e59b5cd8f65cf6db04a8677d4b
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 17 16:51:21 2011 -0700
+
+    Fixed errors
+
+commit 8624bd4c591496203b463481975c95093b05d104
+Merge: 2a1aaab... bd09d3d...
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Tue May 17 16:43:51 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into myBranch
+
+commit bd09d3df2d22848d76243326cdaa822bf467d435
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 17 16:39:38 2011 -0700
+
+    Refactored add logic and fixed prints.
+
+commit 2a1aaab72cb067dd3e05ed904e829dfcb4571db1
+Merge: 0563abc... f11e4a8...
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Tue May 17 15:27:31 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into myBranch
+
+commit d9ee1cc1dfd11ab9a0d1ab84d4cd0550a657a6e3
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 17 15:26:38 2011 -0700
+
+    Added some print statements to help with debugging. may break code.
+
+commit 0563abc1f97913d35d222b8c84b739fcbd5b4e4f
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Tue May 17 15:25:09 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into myBranch
+
+commit f11e4a86761eec2bdabdadd884506a073976d24e
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 17 15:18:31 2011 -0700
+
+    Merge branch 'clook', remote branch 'origin' into clook
+
+commit f164fdb1bd8d74969bffc8b9042bf3206d64ec2c
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 17 15:17:19 2011 -0700
+
+    Fixed some small errors in clook-iosched.c - removed line about clook from bottom of Kconfig.iosched
+
+commit cdfa0b30bb0a38b83275654df237bbff94c56266
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Mon May 16 21:58:32 2011 -0700
+
+    Adding missing files to git repository
+
+commit e4dca2dbb972451321b5ed1afd3eabde2beeff5a
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Mon May 16 21:49:53 2011 -0700
+
+    Our group's version of the clook_Iosched moved over from Subversion
+
+commit 727785b5b68a4caa6ba9584736b09b6cf194a74a
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Mon May 16 16:57:51 2011 -0700
+
+    Adding system files that weren't included on init.
+
+commit 0c908efda05ec4c97a712f9a2db81cac8a2d4975
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Sun May 15 23:33:31 2011 -0700
+
+    added the base .config file to the base directory
+
+commit 8a2340a19d69696a5576c860217859914297320b
+Merge: 1bea2ea... 948ef02...
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Sun May 15 23:29:51 2011 -0700
+
+    Merge branch 'clook' of github.com:lnava/cs411g1 into test
+
+commit 948ef02cf0bcece886c4988f9d949d13d2593b9a
+Author: Jonathan Gill <puzzledeu@gmail.com>
+Date:   Sun May 15 23:20:11 2011 -0700
+
+    block/Makefile and block/Kconfig.iosched updated to project guideline specs
+
+commit 1bea2eaa40d80fc6d9d3fcf9c3a27c38ee16a357
+Merge: 3ad90c6... b25be30...
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Sun May 15 19:31:27 2011 -0700
+
+    Merge branch 'clook' of github.com:lnava/cs411g1 into clook
+
+commit 3ad90c6069768b2850468f9ad284ba82189c5be2
+Author: Luke <luke@teh-laptop.(none)>
+Date:   Sun May 15 19:29:39 2011 -0700
+
+    removed redudant files
+
+commit b25be3089b5e0426e3619a75714ccc9912d9c822
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Sun May 15 17:23:39 2011 -0700
+
+    My own implimentation of the clook algorithm under clook-iosched.c
+
+commit 628ceb2f2eb3a70d73013578962b97d4d4326471
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu May 12 16:29:52 2011 -0700
+
+    made a new branch for a clook I/O scheduler
+
+commit 913784dabdea6cb4b451e6082763dc1c516987a3
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu May 12 15:55:51 2011 -0700
+
+    The vanilla kernel 2.6.34.7

@@ -1,0 +1,373 @@
+Script started on Thu 19 May 2011 04:53:51 PM PDT
+cs411@cs411vm:~$ sui[Kdo modprobe clook-iosched
+[sudo] password for cs411: 
+cs411@cs411vm:~$ sudo su
+root@cs411vm:/home/cs411# cat /sys/block/sdb/queue/scheduler 
+noop deadline [cfq] clook 
+root@cs411vm:/home/cs411# cat /sys/block/sdb/queue/scheduler [C[C[C[1P[1P[1P[1@e[1@c[1@h[1@o[C[1@ [1@c[1@l[1@o[1@o[1@k[C[1@ [1@>
+root@cs411vm:/home/cs411# echo clook > /sys/block/sdb/queue/scheduler [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[9Pcat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+noop deadline cfq [clook] 
+root@cs411vm:/home/cs411# cd /test/
+root@cs411vm:/test# dd if=/dev/zer/[Ko of=t[K/test/testfile_10MB bs=10485768 count=1
+1+0 records in
+1+0 records out
+10485768 bytes (10 MB) copied, 0.0450561 s, 233 MB/s
+root@cs411vm:/test# cd [K[K[Kex[K[Kdmesg 
+Linux version 2.6.34.7-dev-gd1b9bcf (root@cs411vm) (gcc version 4.3.3 (Ubuntu 4.3.3-5ubuntu4) ) #26 SMP Thu May 19 16:52:15 PDT 2011
+BIOS-provided physical RAM map:
+ BIOS-e820: 0000000000000000 - 000000000009f800 (usable)
+ BIOS-e820: 000000000009f800 - 00000000000a0000 (reserved)
+ BIOS-e820: 00000000000ca000 - 00000000000cc000 (reserved)
+ BIOS-e820: 00000000000dc000 - 00000000000e4000 (reserved)
+ BIOS-e820: 00000000000e8000 - 0000000000100000 (reserved)
+ BIOS-e820: 0000000000100000 - 0000000007ef0000 (usable)
+ BIOS-e820: 0000000007ef0000 - 0000000007eff000 (ACPI data)
+ BIOS-e820: 0000000007eff000 - 0000000007f00000 (ACPI NVS)
+ BIOS-e820: 0000000007f00000 - 0000000008000000 (usable)
+ BIOS-e820: 00000000fec00000 - 00000000fec10000 (reserved)
+ BIOS-e820: 00000000fee00000 - 00000000fee01000 (reserved)
+ BIOS-e820: 00000000fffe0000 - 0000000100000000 (reserved)
+Notice: NX (Execute Disable) protection cannot be enabled: non-PAE kernel!
+DMI present.
+Phoenix BIOS detected: BIOS may corrupt low RAM, working around it.
+e820 update range: 0000000000000000 - 0000000000010000 (usable) ==> (reserved)
+e820 update range: 0000000000000000 - 0000000000001000 (usable) ==> (reserved)
+e820 remove range: 00000000000a0000 - 0000000000100000 (usable)
+last_pfn = 0x8000 max_arch_pfn = 0x100000
+initial memory mapped : 0 - 00800000
+found SMP MP-table at [c00f69b0] f69b0
+init_memory_mapping: 0000000000000000-0000000008000000
+ 0000000000 - 0000400000 page 4k
+ 0000400000 - 0008000000 page 2M
+kernel direct mapping tables up to 8000000 @ 11000-15000
+128MB LOWMEM available.
+  mapped low ram: 0 - 08000000
+  low ram: 0 - 08000000
+Zone PFN ranges:
+  DMA      0x00000010 -> 0x00001000
+  Normal   0x00001000 -> 0x00008000
+Movable zone start PFN for each node
+early_node_map[3] active PFN ranges
+    0: 0x00000010 -> 0x0000009f
+    0: 0x00000100 -> 0x00007ef0
+    0: 0x00007f00 -> 0x00008000
+On node 0 totalpages: 32639
+free_area_init_node: node 0, pgdat c03ec800, node_mem_map c1000200
+  DMA zone: 32 pages used for memmap
+  DMA zone: 0 pages reserved
+  DMA zone: 3951 pages, LIFO batch:0
+  Normal zone: 224 pages used for memmap
+  Normal zone: 28432 pages, LIFO batch:7
+Using APIC driver default
+Intel MultiProcessor Specification v1.4
+    Virtual Wire compatibility mode.
+MPTABLE: OEM ID: INTEL   
+MPTABLE: Product ID: 440BX       
+MPTABLE: APIC at: 0xFEE00000
+Processor #0 (Bootup-CPU)
+I/O APIC #1 Version 17 at 0xFEC00000.
+Processors: 1
+SMP: Allowing 1 CPUs, 0 hotplug CPUs
+nr_irqs_gsi: 24
+Allocating PCI resources starting at 8000000 (gap: 8000000:f6c00000)
+early_res array is doubled to 64 at [11000 - 117ff]
+setup_percpu: NR_CPUS:8 nr_cpumask_bits:8 nr_cpu_ids:1 nr_node_ids:1
+PERCPU: Embedded 12 pages/cpu @c1400000 s27476 r0 d21676 u4194304
+pcpu-alloc: s27476 r0 d21676 u4194304 alloc=1*4194304
+pcpu-alloc: [0] 0 
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 32383
+Kernel command line: root=/dev/sda1 ro
+PID hash table entries: 512 (order: -1, 2048 bytes)
+Dentry cache hash table entries: 16384 (order: 4, 65536 bytes)
+Inode-cache hash table entries: 8192 (order: 3, 32768 bytes)
+Enabling fast FPU save and restore... done.
+Enabling unmasked SIMD FPU exception support... done.
+Initializing CPU#0
+Subtract (41 early reservations)
+  #1 [0000001000 - 0000002000]   EX TRAMPOLINE
+  #2 [0000100000 - 000045e294]   TEXT DATA BSS
+  #3 [000045f000 - 00004611c0]             BRK
+  #4 [00000f69c0 - 0000100000]   BIOS reserved
+  #5 [00000f69b0 - 00000f69c0]    MP-table mpf
+  #6 [000009f800 - 000009fd70]   BIOS reserved
+  #7 [000009fe60 - 00000f69b0]   BIOS reserved
+  #8 [000009fd70 - 000009fe60]    MP-table mpc
+  #9 [0000010000 - 0000011000]      TRAMPOLINE
+  #10 [0001000000 - 0001100000]         BOOTMEM
+  #11 [0001100000 - 0001100004]         BOOTMEM
+  #12 [0001100040 - 0001100100]         BOOTMEM
+  #13 [0001100100 - 000110010c]         BOOTMEM
+  #14 [0001100140 - 0001100740]         BOOTMEM
+  #15 [0001100740 - 0001100767]         BOOTMEM
+  #16 [0001100780 - 00011008ec]         BOOTMEM
+  #17 [0001100900 - 0001100940]         BOOTMEM
+  #18 [0001100940 - 0001100980]         BOOTMEM
+  #19 [0001100980 - 00011009c0]         BOOTMEM
+  #20 [00011009c0 - 0001100a00]         BOOTMEM
+  #21 [0001100a00 - 0001100a40]         BOOTMEM
+  #22 [0001100a40 - 0001100a80]         BOOTMEM
+  #23 [0001100a80 - 0001100ac0]         BOOTMEM
+  #24 [0001100ac0 - 0001100b00]         BOOTMEM
+  #25 [0001100b00 - 0001100b40]         BOOTMEM
+  #26 [0001100b40 - 0001100b80]         BOOTMEM
+  #27 [0001100b80 - 0001100bc0]         BOOTMEM
+  #28 [0001100bc0 - 0001100c00]         BOOTMEM
+  #29 [0001100c00 - 0001100c12]         BOOTMEM
+  #30 [0001100c40 - 0001100c52]         BOOTMEM
+  #31 [0001400000 - 000140c000]         BOOTMEM
+  #32 [0001102c80 - 0001102c84]         BOOTMEM
+  #33 [0001102cc0 - 0001102cc4]         BOOTMEM
+  #34 [0001102d00 - 0001102d04]         BOOTMEM
+  #35 [0001102d40 - 0001102d44]         BOOTMEM
+  #36 [0001102d80 - 0001102e30]         BOOTMEM
+  #37 [0001102e40 - 0001102ee8]         BOOTMEM
+  #38 [0001100c80 - 0001101480]         BOOTMEM
+  #39 [0001102f00 - 0001112f00]         BOOTMEM
+  #40 [0001112f00 - 000111af00]         BOOTMEM
+Memory: 125908k/131072k available (2171k kernel code, 4648k reserved, 829k data, 296k init, 0k highmem)
+virtual kernel memory layout:
+    fixmap  : 0xfff20000 - 0xfffff000   ( 892 kB)
+    vmalloc : 0xc8800000 - 0xfff1e000   ( 887 MB)
+    lowmem  : 0xc0000000 - 0xc8000000   ( 128 MB)
+      .init : 0xc03ef000 - 0xc0439000   ( 296 kB)
+      .data : 0xc031ef05 - 0xc03ee5b8   ( 829 kB)
+      .text : 0xc0100000 - 0xc031ef05   (2171 kB)
+Checking if this processor honours the WP bit even in supervisor mode...Ok.
+Hierarchical RCU implementation.
+RCU-based detection of stalled CPUs is enabled.
+NR_IRQS:512
+Console: colour VGA+ 80x25
+console [tty0] enabled
+TSC freq read from hypervisor : 2992.500 MHz
+Detected 2992.500 MHz processor.
+Calibrating delay loop (skipped) preset value.. 5985.00 BogoMIPS (lpj=11970000)
+Mount-cache hash table entries: 512
+CPU: Physical Processor ID: 0
+Performance Events: Core2 events, Intel PMU driver.
+... version:                2
+... bit width:              40
+... generic registers:      2
+... value mask:             000000ffffffffff
+... max period:             000000007fffffff
+... fixed-purpose events:   3
+... event mask:             0000000700000003
+Checking 'hlt' instruction... OK.
+SMP alternatives: switching to UP code
+Freeing SMP alternatives: 20k freed
+Enabling APIC mode:  Flat.  Using 1 I/O APICs
+ExtINT not setup in hardware but reported by MP table
+..TIMER: vector=0x30 apic1=0 pin1=2 apic2=0 pin2=0
+CPU0: Intel(R) Xeon(R) CPU           X5450  @ 3.00GHz stepping 0a
+Brought up 1 CPUs
+Total of 1 processors activated (5985.00 BogoMIPS).
+NET: Registered protocol family 16
+PCI: PCI BIOS revision 2.10 entry at 0xfd8a0, last bus=1
+PCI: Using configuration type 1 for base access
+bio: create slab <bio-0> at 0
+vgaarb: loaded
+SCSI subsystem initialized
+PCI: Probing PCI hardware
+PCI: Probing PCI hardware (bus 00)
+pci 0000:00:07.1: reg 20: [io  0x1060-0x106f]
+pci 0000:00:07.3: quirk: [io  0x1000-0x103f] claimed by PIIX4 ACPI
+pci 0000:00:07.3: quirk: [io  0x1040-0x104f] claimed by PIIX4 SMB
+pci 0000:00:0f.0: reg 10: [io  0x1070-0x107f]
+pci 0000:00:0f.0: reg 14: [mem 0xf8000000-0xfbffffff]
+pci 0000:00:0f.0: reg 18: [mem 0xf4000000-0xf47fffff]
+pci 0000:00:0f.0: reg 30: [mem 0x00000000-0x00007fff pref]
+pci 0000:00:10.0: reg 10: [io  0x1080-0x10ff]
+pci 0000:00:10.0: reg 14: [mem 0xf4800000-0xf4800fff]
+pci 0000:00:10.0: reg 30: [mem 0x00000000-0x00003fff pref]
+pci 0000:00:11.0: reg 10: [io  0x1400-0x147f]
+pci 0000:00:11.0: reg 30: [mem 0x00000000-0x0000ffff pref]
+pci 0000:00:01.0: PCI bridge to [bus 01-01]
+pci 0000:00:01.0:   bridge window [io  0xf000-0x0000] (disabled)
+pci 0000:00:01.0:   bridge window [mem 0xfff00000-0x000fffff] (disabled)
+pci 0000:00:01.0:   bridge window [mem 0xfff00000-0x000fffff pref] (disabled)
+vgaarb: device added: PCI:0000:00:0f.0,decodes=io+mem,owns=io+mem,locks=none
+pci 0000:00:07.0: PIIX/ICH IRQ router [8086:7110]
+PCI: pci_cache_line_size set to 64 bytes
+reserve RAM buffer: 000000000009f800 - 000000000009ffff 
+reserve RAM buffer: 0000000007ef0000 - 0000000007ffffff 
+Switching to clocksource tsc
+pci 0000:00:11.0: BAR 6: assigned [mem 0x08000000-0x0800ffff pref]
+pci 0000:00:0f.0: BAR 6: assigned [mem 0x08010000-0x08017fff pref]
+pci 0000:00:10.0: BAR 6: assigned [mem 0x08018000-0x0801bfff pref]
+pci 0000:00:01.0: PCI bridge to [bus 01-01]
+pci 0000:00:01.0:   bridge window [io  disabled]
+pci 0000:00:01.0:   bridge window [mem disabled]
+pci 0000:00:01.0:   bridge window [mem pref disabled]
+pci 0000:00:01.0: setting latency timer to 64
+pci_bus 0000:00: resource 0 [io  0x0000-0xffff]
+pci_bus 0000:00: resource 1 [mem 0x00000000-0xffffffff]
+NET: Registered protocol family 2
+IP route cache hash table entries: 1024 (order: 0, 4096 bytes)
+TCP established hash table entries: 4096 (order: 3, 32768 bytes)
+TCP bind hash table entries: 4096 (order: 3, 32768 bytes)
+TCP: Hash tables configured (established 4096 bind 4096)
+TCP reno registered
+UDP hash table entries: 128 (order: 0, 4096 bytes)
+UDP-Lite hash table entries: 128 (order: 0, 4096 bytes)
+NET: Registered protocol family 1
+pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+pci 0000:00:0f.0: Boot video device
+PCI: CLS 32 bytes, default 64
+platform rtc_cmos: registered platform RTC device (no PNP device found)
+fuse init (API version 7.13)
+msgmni has been set to 245
+alg: No test for cipher_null (cipher_null-generic)
+alg: No test for ecb(cipher_null) (ecb-cipher_null)
+alg: No test for digest_null (digest_null-generic)
+alg: No test for compress_null (compress_null-generic)
+alg: No test for stdrng (krng)
+Block layer SCSI generic (bsg) driver version 0.4 loaded (major 253)
+io scheduler noop registered
+io scheduler deadline registered
+io scheduler cfq registered (default)
+brd: module loaded
+loop: module loaded
+pcnet32: pcnet32.c:v1.35 21.Apr.2008 tsbogend@alpha.franken.de
+pcnet32 0000:00:11.0: PCI->APIC IRQ transform: INT A -> IRQ 18
+pcnet32: PCnet/PCI II 79C970A at 0x1400, 00:50:56:00:00:01 assigned IRQ 18
+pcnet32: eth0: registered as PCnet/PCI II 79C970A
+pcnet32: 1 cards_found
+Fusion MPT base driver 3.04.14
+Copyright (c) 1999-2008 LSI Corporation
+Fusion MPT SPI Host driver 3.04.14
+mptspi 0000:00:10.0: PCI->APIC IRQ transform: INT A -> IRQ 17
+mptbase: ioc0: Initiating bringup
+ioc0: LSI53C1030 B0: Capabilities={Initiator}
+scsi0 : ioc0: LSI53C1030 B0, FwRev=01032920h, Ports=1, MaxQ=128, IRQ=17
+scsi 0:0:0:0: Direct-Access     VMware   Virtual disk     1.0  PQ: 0 ANSI: 2
+scsi target0:0:0: Beginning Domain Validation
+scsi target0:0:0: Domain Validation skipping write tests
+scsi target0:0:0: Ending Domain Validation
+scsi target0:0:0: FAST-40 WIDE SCSI 80.0 MB/s ST (25 ns, offset 127)
+scsi 0:0:1:0: Direct-Access     VMware   Virtual disk     1.0  PQ: 0 ANSI: 2
+scsi target0:0:1: Beginning Domain Validation
+scsi target0:0:1: Domain Validation skipping write tests
+scsi target0:0:1: Ending Domain Validation
+scsi target0:0:1: FAST-40 WIDE SCSI 80.0 MB/s ST (25 ns, offset 127)
+sd 0:0:0:0: [sda] 20971520 512-byte logical blocks: (10.7 GB/10.0 GiB)
+sd 0:0:0:0: [sda] Write Protect is off
+sd 0:0:0:0: [sda] Mode Sense: 03 00 00 00
+sd 0:0:0:0: [sda] Cache data unavailable
+sd 0:0:0:0: [sda] Assuming drive cache: write through
+sd 0:0:0:0: [sda] Cache data unavailable
+sd 0:0:0:0: [sda] Assuming drive cache: write through
+ sda:
+sd 0:0:1:0: [sdb] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+sd 0:0:1:0: [sdb] Write Protect is off
+sd 0:0:1:0: [sdb] Mode Sense: 03 00 00 00
+sd 0:0:1:0: [sdb] Cache data unavailable
+sd 0:0:1:0: [sdb] Assuming drive cache: write through
+sd 0:0:1:0: [sdb] Cache data unavailable
+sd 0:0:1:0: [sdb] Assuming drive cache: write through
+ sdb: sda1 sda3
+sd 0:0:0:0: [sda] Cache data unavailable
+sd 0:0:0:0: [sda] Assuming drive cache: write through
+sd 0:0:0:0: [sda] Attached SCSI disk
+ sdb1
+sd 0:0:1:0: [sdb] Cache data unavailable
+sd 0:0:1:0: [sdb] Assuming drive cache: write through
+sd 0:0:1:0: [sdb] Attached SCSI disk
+serio: i8042 KBD port at 0x60,0x64 irq 1
+serio: i8042 AUX port at 0x60,0x64 irq 12
+TCP cubic registered
+NET: Registered protocol family 17
+Using IPI Shortcut mode
+drivers/rtc/hctosys.c: unable to open rtc device (rtc0)
+input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input0
+kjournald starting.  Commit interval 5 seconds
+EXT3-fs (sda1): mounted filesystem with writeback data mode
+VFS: Mounted root (ext3 filesystem) readonly on device 8:1.
+Freeing unused kernel memory: 296k freed
+pcnet32 0000:00:11.0: eth0: link up
+Adding 441780k swap on /dev/sda3.  Priority:-1 extents:1 across:441780k 
+EXT3-fs (sda1): using internal journal
+kjournald starting.  Commit interval 5 seconds
+EXT3-fs (sdb1): using internal journal
+EXT3-fs (sdb1): mounted filesystem with writeback data mode
+io scheduler clook registered
+[CLOOK] add <R> <4679>
+[CLOOK] dsp <R> <4679>
+[CLOOK] add <R> <583>
+[CLOOK] dsp <R> <583>
+[CLOOK] add <R> <49311>
+[CLOOK] dsp <R> <49311>
+[CLOOK] add <R> <57511>
+[CLOOK] dsp <R> <57511>
+[CLOOK] add <R> <65719>
+[CLOOK] dsp <R> <65719>
+[CLOOK] add <R> <57519>
+[CLOOK] dsp <R> <57519>
+[CLOOK] add <W> <131135>
+[CLOOK] add <W> <131239>
+[CLOOK] add <W> <132263>
+[CLOOK] add <W> <133287>
+[CLOOK] dsp <W> <131135>
+[CLOOK] dsp <W> <131239>
+[CLOOK] dsp <W> <132263>
+[CLOOK] dsp <W> <133287>
+[CLOOK] add <W> <133295>
+[CLOOK] add <W> <134319>
+[CLOOK] add <W> <135343>
+[CLOOK] dsp <W> <133295>
+[CLOOK] dsp <W> <134319>
+[CLOOK] dsp <W> <135343>
+[CLOOK] add <W> <135351>
+[CLOOK] add <W> <136375>
+[CLOOK] add <W> <137399>
+[CLOOK] add <W> <138423>
+[CLOOK] dsp <W> <135351>
+[CLOOK] dsp <W> <136375>
+[CLOOK] dsp <W> <137399>
+[CLOOK] dsp <W> <138423>
+[CLOOK] add <W> <138431>
+[CLOOK] add <W> <139447>
+[CLOOK] add <W> <140471>
+[CLOOK] add <W> <141495>
+[CLOOK] dsp <W> <138431>
+[CLOOK] dsp <W> <139447>
+[CLOOK] dsp <W> <140471>
+[CLOOK] dsp <W> <141495>
+[CLOOK] add <W> <141503>
+[CLOOK] dsp <W> <141503>
+[CLOOK] add <W> <142367>
+[CLOOK] add <W> <143391>
+[CLOOK] add <W> <144415>
+[CLOOK] add <W> <145439>
+[CLOOK] dsp <W> <142367>
+[CLOOK] dsp <W> <143391>
+[CLOOK] dsp <W> <144415>
+[CLOOK] dsp <W> <145439>
+[CLOOK] add <W> <145447>
+[CLOOK] add <W> <146471>
+[CLOOK] add <W> <147495>
+[CLOOK] add <W> <147647>
+[CLOOK] dsp <W> <145447>
+[CLOOK] dsp <W> <146471>
+[CLOOK] dsp <W> <147495>
+[CLOOK] dsp <W> <147647>
+[CLOOK] add <W> <147655>
+[CLOOK] add <W> <148679>
+[CLOOK] add <W> <149703>
+[CLOOK] add <W> <150727>
+[CLOOK] dsp <W> <147655>
+[CLOOK] dsp <W> <148679>
+[CLOOK] dsp <W> <149703>
+[CLOOK] dsp <W> <150727>
+[CLOOK] add <W> <150735>
+[CLOOK] dsp <W> <150735>
+[CLOOK] add <W> <528447>
+[CLOOK] dsp <W> <528447>
+[CLOOK] add <W> <528455>
+[CLOOK] dsp <W> <528455>
+[CLOOK] add <W> <528535>
+[CLOOK] dsp <W> <528535>
+root@cs411vm:/test# exit
+exit
+cs411@cs411vm:~$ exit
+exit
+
+Script done on Thu 19 May 2011 04:55:43 PM PDT
