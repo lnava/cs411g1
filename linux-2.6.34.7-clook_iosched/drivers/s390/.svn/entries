@@ -1,83 +1,0 @@
-10
-
-dir
-67
-file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1/linux-2.6.34.7-clook_iosched/drivers/s390
-file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1
-
-
-
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-1b86b93b-59e6-4f93-ae39-410b58319674
-
-crypto
-dir
-
-scsi
-dir
-
-net
-dir
-
-block
-dir
-
-cio
-dir
-
-char
-dir
-
-kvm
-dir
-
-Makefile
-file
-
-
-
-
-2011-05-17T04:40:28.000000Z
-fc5d825469d1232a41ba5133bcdae00b
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-144
-
