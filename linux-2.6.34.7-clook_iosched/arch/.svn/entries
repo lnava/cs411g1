@@ -1,165 +1,0 @@
-10
-
-dir
-67
-file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1/linux-2.6.34.7-clook_iosched/arch
-file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1
-
-
-
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-1b86b93b-59e6-4f93-ae39-410b58319674
-
-arm
-dir
-
-powerpc
-dir
-
-Kconfig
-file
-
-
-
-
-2011-05-17T04:39:03.000000Z
-bd0c87a201ce13cb938ba56e4d0a671c
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-3882
-
-parisc
-dir
-
-um
-dir
-
-m32r
-dir
-
-m68k
-dir
-
-alpha
-dir
-
-x86
-dir
-
-microblaze
-dir
-
-frv
-dir
-
-avr32
-dir
-
-mn10300
-dir
-
-s390
-dir
-
-cris
-dir
-
-m68knommu
-dir
-
-h8300
-dir
-
-xtensa
-dir
-
-ia64
-dir
-
-.gitignore
-file
-
-
-
-
-2011-05-17T04:39:03.000000Z
-4d5f5f5eaeacc397b3709b105de2977e
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-12
-
-mips
-dir
-
-sparc
-dir
-
-blackfin
-dir
-
-sh
-dir
-
-score
-dir
-

@@ -1,224 +1,0 @@
-10
-
-dir
-67
-file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1/linux-2.6.34.7-clook_iosched/arch/powerpc/platforms
-file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1
-
-
-
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-1b86b93b-59e6-4f93-ae39-410b58319674
-
-cell
-dir
-
-44x
-dir
-
-amigaone
-dir
-
-Kconfig
-file
-
-
-
-
-2011-05-17T04:31:22.000000Z
-f422fbbea0afa6b32b0ba1df3f7f5670
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-9351
-
-8xx
-dir
-
-chrp
-dir
-
-maple
-dir
-
-embedded6xx
-dir
-
-512x
-dir
-
-fsl_uli1575.c
-file
-
-
-
-
-2011-05-17T04:31:22.000000Z
-2e426e5d4d4d27a5f9e924e9a59bfc07
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-9402
-
-iseries
-dir
-
-ps3
-dir
-
-52xx
-dir
-
-prep
-dir
-
-Kconfig.cputype
-file
-
-
-
-
-2011-05-17T04:31:22.000000Z
-a8927042a6de96dfcca0d870a1fa2329
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-8519
-
-82xx
-dir
-
-pseries
-dir
-
-83xx
-dir
-
-40x
-dir
-
-85xx
-dir
-
-86xx
-dir
-
-powermac
-dir
-
-Makefile
-file
-
-
-
-
-2011-05-17T04:31:22.000000Z
-8a45d21f35a6c0f1fc32f08822fc39b8
-2011-04-08T18:52:44.370225Z
-1
-naval
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-744
-
-pasemi
-dir
-
