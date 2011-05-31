@@ -419,4 +419,4 @@ static void sbull_exit(void)
 }
 
 module_init(osurd_init);
-module_exit(osurd_init);
+module_exit(osurd_exit);
