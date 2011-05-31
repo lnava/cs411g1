@@ -1,0 +1,91 @@
+10
+
+dir
+53
+file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1/linux-2.6.34.7
+file:///nfs/stak/a2/classes/eecs/spring2011/cs411/groups/g1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+incomplete
+1b86b93b-59e6-4f93-ae39-410b58319674
+
+crypto
+dir
+
+kernel
+dir
+
+include
+dir
+
+virt
+dir
+
+net
+dir
+
+scripts
+dir
+
+sound
+dir
+
+block
+dir
+
+tools
+dir
+
+init
+dir
+
+samples
+dir
+
+lib
+dir
+
+security
+dir
+
+fs
+dir
+
+Documentation
+dir
+
+mm
+dir
+
+usr
+dir
+
+ipc
+dir
+
+firmware
+dir
+
+arch
+dir
+
+drivers
+dir
+
