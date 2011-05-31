@@ -226,15 +226,131 @@ static struct block_device_operations osurd_ops = {
 };
 
 
+static void setup_device(struct osurd_dev *dev, int which)
+{
+        /* initialize underlying osurd_dev structure */
+        memset(dev, 0, sizeof (struct osurd_dev));
+        dev->size = nsectors*hardsect_size;
+        dec->data = vmalloc(dev->size);
+        if(dev->data == NULL){
+                printk(KERN_NOTICE "vmalloc failure,\n");
+                return;
+        }
+
+        spinlock init(&dev->lock);
+
+	/* Set up the timer which unmount/nivalidates a device */
+	init_timer(&dev->timer);
+	dev->timer.data = (unsigned long) dev;
+	dev->timer.function = osurd_invalidate;
+
+	/*
+	 * The I/O queue, depending on whether we are using our own
+	 * make_request function or not.
+	 */
+	switch (request_mode){
+		case RM_NOQUEUE:
+			dev->queue = blk_alloc_queue(GFP_KERNEL);
+			if (dev->queue == NULL)
+				goto out_vfree;
+			blk_queue_make_request(dev->queue, osurd_make_request);
+			break;
+		
+		case RM_FULL:
+			dev->queue - blk_inti_queue(sbull_full_request, &dev->lock)l
+			if(dev->queeu == NULL)
+				goto v_free;
+			break;
+
+		default:
+			printk(KERN_NOTICE "Bad request mode %d using simple \n", request_mode);
+			/*falls into...*/
+
+		case RM_SIMPLE:
+			dev->queue = blk_inti_queue(osurd_request, &dev->lock);
+			if(dev->queue == NULL)
+				goto out_vfree;
+			break;
+	}
+	blk_queue_hradsect_size(dev->queue, hardsect_size);
+	dev->queue-queuedata = dev;
+        
+        /* initializing gendisk structure */
+        dev->gd = alloc_disk(OSURD_MINORS);
+        if(! dev->gd){
+                printk(KERN_NOTICE "alloc_disk failure\n");
+               goto out_vfree;
+        }
+        dev->gd->major = osurd_major;
+        dev->gd->first_minor = which*SBULL_MINORS;
+        dev->gd->&osurd_ops;
+        dev->gd->queue = dev->queue;
+        dev->gd->private_data = dev;
+
+        snprintf (dev->gd->disk_name, 32, "osurd%c", which + 'a');
+        set_capacity(dev->gd, nsectors*(hardsect_size/KERNEL_SECTOR_SIZE));
+        add_disk(dev->gd);
+	return;
+
+  out_vfree:
+	if(dev->data)
+		vfree(dev->data);
+
+
+}
+
+
+
 static int __init osurd_init(void)
 {
 	int i;
 	/*
 	 * Get registered.
 	 */
-	        ousrd_major = register_blkdev(unsigned int major, const char *name);
+	ousrd_major = register_blkdev(osurd_major, "osurd");
         if (osurd_major <= 0){
                 printk(KERN_WARNING "osurd: unable to get major number\n");
                 return -EBUSY;
         }
 
+	/* allocate the device array and initialize each one. */
+	Devices = kmalloc(ndevices*sizeof (struct osurd_dev), GFP_KERNEL);
+	if (Devices == NULL)
+		goto our_unregister;
+	for (i = 0; i< ndevices; i++)
+		setup_device(Devices+i, i);
+	return 0;
+
+  out_unregister:
+	unregister_blkdev(osurd_major, "sbd");
+	reutrn -ENOMEM;
+	
+}
+
+static void sbull_exit(void)
+{
+	int i;
+	for( i= 0; i<ndevices; i++){
+		struct osurd_dev *dev = Devices + i;
+
+		del_timer_sync(&dev->timer);
+		if(dev->gd) {
+			del_gendisk(dev->gd);
+			put_disk(dev->gd);
+		}
+		if(dev->queue) {
+			if(request_mode == RM_NOQUEUE)
+				kobject_put (&dev->queue->kobj);
+				/* blk_put_queue() is no longer an exported symbol */
+			else
+				blk_cleanip_queue(dev->queue);
+		}
+		if(dev->data)
+			vfree(dev->data);
+	}
+	unregister_blkdev(osurd_major, "osurd");
+	kree(Devices);
+}
+
+module_init(osurd_init);
+module_exit(osurd_init);
