@@ -3,7 +3,7 @@
  * Jonathan Gill
  * Tyler Howe
  *
- * Code modified from http://www.cs.fsu.edu/~baker/devices/lxr/http/source/ldd-examples/sbull/sbull.c
+ * Code modified from http://www.cs.fsu.edu/~baker/devices/lxr/http/source/ldd-examples/osurd/osurd.c
  */
 
 #include <linux/module.h>
@@ -37,6 +37,18 @@ static int nsectors = 1024;		/* How big thedrive is */
 module_param(nsectors, int, 0);
 static int ndevices = 4;		/* Number of read heads */
 module_param(ndevices, int, 0);
+
+/*
+ * The different "request modes" we can use.
+ */
+enum {
+	RM_SIMPLE = 0, /* The extra-simple request function */
+	RM_FULL = 1,   /* The full-blown version */
+	RM_NO_QUEUE = 2, /* Use make_request */
+};
+
+static int request_mode = RM_SIMPLE;
+module_param(request_mode, int, 0);
 
 
 /*
@@ -78,8 +90,8 @@ static struct osurd_dev *Devices = NULL;
 static void osurd_transfer(static osurd_dev *dev, unsigned long sector,
 		unsigned long nsect, char *buffer, int write)
 {
-	unsigned long offset = sector * hardsect_size;
-	unsigned long nbytes = nsect * hardsect_size;
+	unsigned long offset = sector*KERNEL_SECTOR_SIZE;
+	unsigned long nbytes = nsect*KERNEL_SECTOR_SIZE;
 
 	if((offset + nbytes) > dev->size){
 		printk (KERN_NOTICE "Beyond-end write (%ld %ld)\n", offset, nbytes);
@@ -113,7 +125,7 @@ static void osurd_request(struct request_queue *q)
 				ref->flags);
 		/*  End of debugging output */
 		osurd_transfer(dev, req->sector, req->current_nr_sectors,
-				req->buffer, rq_datta_dir(req));
+				req->buffer, rq_data_dir(req));
 		blk_end_request(req, 1, req->current_nr_sectors << 9);
 	}
 }
@@ -127,7 +139,7 @@ static int osurd_xfer_bio(struct osurd_dev *dev, struct bio *bio)
 	struct bio_vec *bvec;
 	sector_t sector = bio->bi_sector;
 
-	/*Do each segment independently */
+	/* Do each segment independently. */
 	bio_for_each_segment(bvec, bio, i) {
 		char *buffer = __bio_kmap_atomic(bio, i, KM_USER0);
 		osurd_transfer(dev, sector, bio_cur_sectors(bio),
@@ -135,7 +147,7 @@ static int osurd_xfer_bio(struct osurd_dev *dev, struct bio *bio)
 		sector += bio_cur_sectors(bio);
 		__bio_kunmap_atomic(bio, KM_USER0);
 	}
-	return 0; /* Always "succeed */
+	return 0; /* Always "succeed" */
 }
 
 /*
@@ -169,14 +181,14 @@ static void osurd_full_request(struct request_queue *q)
 	int sectors_xferred;
 	struct osurd_dev *dev = q->queuedata;
 	
-	while(( req = elv_next_request(q) ) != NULL) {
+	while( (req = elv_next_request(q)) != NULL ) {
 		if (! blk_fs_request(req) ) {
 			printk (KERN_NOTICE "Skip non-fs request\n");
 			end_request(req, 0);
 			continue;
 		}
 		sectors_xferred = odurd_xfer_request(dev, req);
-		__blk_end_request (req, 1, secotrs_xferred << 9);
+		__blk_end_request (req, 1, sectors_xferred << 9);
 		/* The above includes a call to add_disk_randomness(). */
 	}
 }
@@ -184,7 +196,6 @@ static void osurd_full_request(struct request_queue *q)
 /*
  * The direct make request version.
  */	
-
 static int osurd_make_request(struct request_queue *q, struct bio *bio)
 {
 	struct osurd_dev *dev = q->queuedata;
@@ -201,19 +212,74 @@ static int osurd_make_request(struct request_queue *q, struct bio *bio)
  * The block device API has changed since the original code was written
  * int (*open) (struct block_device *bdev, fmode_t mode);
 */ 
-
-static int osurd_open(struct block_device *bdev, fmode_t mode){
-	struct sbull_dev *dev = *bdev;
-
+static int osurd_open(struct block_device *bdev, fmode_t mode)
+{
+	struct osurd_dev *dev = bdev->bd_disk->private_data;
+	
 	del_timer_sync(&dev->timer);
 	spin_lock(&dev->lock);
 	if (! dev->users)
-		check_disk_change(
+		check_disk_change(bdev);
 	dev->users++;
 	spin_unlock(&dev->lock);
 	return 0;
 }
 
+static int osurd_release(struct gendisk *disk, fmode_t mode)
+{
+	struct osurd_dev *dev = disk->private_data;
+
+	spin_lock(&dev->lock);
+	dev->users--;
+	if(!dev->users) {
+		dev->timer.expires = jiffies + INVALIDATE_DELAY;
+		add_timer(&dev->timer);
+	}
+	spin_unlock(&dev->lock);i
+
+	return 0;
+}
+
+/*
+ * Look for a (simulated media change
+ */
+int osurd_media_changed(struct gendisk *gd)
+{
+	struct osurd_dev *dev = gd->private_data;
+
+	return dev->media_change;
+}
+
+/*
+* Revalidate. WE DO NOT TAKE THE LOCK HERE, for fear of deadlocking
+* with open. That needs to be reevaluated.
+*/
+int osurd_revalidate(struct gendisk *gd)
+{
+	struct osurd_dev *dev = gd->private_data;
+
+	if (dev->media_change) {
+		dev->media_change = 0;
+		memset (dev->data, 0, dev->size);
+	}
+	return 0;
+}
+
+/*
+* The "invalidate" function runs out of the device timer; it sets
+* a flag to simulate the removal of the media.
+*/
+void osurd_invalidate(unsigned long ldev)
+{
+	struct osurd_dev *dev = (struct osurd_dev *) ldev;
+
+	spin_lock(&dev->lock);
+	if (dev->users || !dev->data)
+		printk (KERN_WARNING "osurd: timer sanity check failed\n");
+	else
+		dev->media_change = 1;
+	spin_unlock(&dev->lock);
+}
 
 /* The device operations structure */
 static struct block_device_operations osurd_ops = {
