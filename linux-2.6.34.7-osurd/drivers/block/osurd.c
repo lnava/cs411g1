@@ -26,6 +26,7 @@
 #include <linux/buffer_head.h>	/* invalidate_bdev */
 #include <linux/bio.h>
 
+MODULE_LICENSE("Dual BSD/GPL");
 
 /* Module parameters */
 static int osurd_major = 0;		/* Device major */
@@ -37,8 +38,6 @@ module_param(nsectors, int, 0);
 static int ndevices = 4;		/* Number of read heads */
 module_param(ndevices, int, 0);
 
-static int disksize = 512;
-module_param(disksize, int, S_IRUGO);
 
 /*
  * Minor number and partition managment
@@ -79,8 +78,8 @@ static struct osurd_dev *Devices = NULL;
 static void osurd_transfer(static osurd_dev *dev, unsigned long sector,
 		unsigned long nsect, char *buffer, int write)
 {
-	unsigned long offset = sector*KERNEL_SECTOR_SIZE;
-	unsigned long nbytes = nsect*KERNEL_SECTOR_SIZE;
+	unsigned long offset = sector * hardsect_size;
+	unsigned long nbytes = nsect * hardsect_size;
 
 	if((offset + nbytes) > dev->size){
 		printk (KERN_NOTICE "Beyond-end write (%ld %ld)\n", offset, nbytes);
