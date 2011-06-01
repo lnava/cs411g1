@@ -119,7 +119,13 @@ static void osurd_request(struct request_queue *q)
 			blk_end_request_all(req, -EIO);
 			continue;
 		}
+	
+		/* Debuggin printk statements */
+		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\n sector: %ld\n nr: %d\n flags: %lx\n				-------\n", dev-Devices, rq_data_dir(req), req->sectors, 
+					req->current_nr_sectors, req->flags);
 		/*  End of debugging output */
+
+
 		osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
 				req->buffer, rq_data_dir(req));
 		if( !__blk_end_request_cur(req, 0))
