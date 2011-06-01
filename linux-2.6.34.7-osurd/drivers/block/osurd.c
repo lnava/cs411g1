@@ -114,7 +114,7 @@ static void osurd_request(struct request_queue *q)
 
 	req = blk_fetch_request(q);
 	
-	while ((req != NULL)) {
+	while (req != NULL) {
 		struct osurd_dev *dev = req->rq_disk->private_data;
 		if(! blk_fs_request(req)) {
 			printk (KERN_NOTICE "Skip non-fs request \n");
@@ -123,7 +123,7 @@ static void osurd_request(struct request_queue *q)
 		}
 	
 		/* Debuggin printk statements */
-		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\n sector: %ld\n nr: %d\n flags: %lx\n				-------\n", dev-Devices, rq_data_dir(req), req->sectors, 
+		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\n sector: %ld\n nr: %d\n flags: %lx\n-------\n", dev-Devices, rq_data_dir(req), req->sector, 
 					req->current_nr_sectors, req->flags);
 		/*  End of debugging output */
 
@@ -289,14 +289,15 @@ void osurd_invalidate(unsigned long ldev)
 int osurd_ioctl (struct block_device *device, fmode_t mode,
 unsigned int cmd, unsigned long arg)
 {
-        long size;
+        /*
+	long size;
         struct hd_geometry geo;
         struct osurd_dev *dev = device->bd_disk->private_data;
-
+	*/
         switch(cmd) {
                /*
 		 case HDIO_GETGEO:
-                /*
+                *
                 * Get geometry: since we are a virtual device, we have to make
                 * up something plausible. So we claim 16 sectors, four heads,
                 * and calculate the corresponding number of cylinders. We set the
