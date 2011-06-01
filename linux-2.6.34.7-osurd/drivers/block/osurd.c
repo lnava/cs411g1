@@ -158,7 +158,7 @@ static int osurd_xfer_request(struct osurd_dev *dev, struct request *req)
 	rq_for_each_segment(bvec, req, iter) {
 		char *buffer = __bio_kmap_atomic(iter.bio, iter.i, KM_USER0);
 		sector_t sector = iter.bio->bi_sector;
-		osurd_transfer(dev, sector, bio_cur_sectors(iter.bio),
+		osurd_transfer(dev, sector, bio_cur_bytes(iter.bio)>>9,
 				buffer, bio_data_dir(iter.bio) == WRITE);
 		sector += bio_cur_sectors(iter.bio);
 		__bio_kunmap_atomic(iter.bio, KM_USER0);
@@ -287,19 +287,51 @@ static struct block_device_operations osurd_ops = {
 	.ioctl		= osurd_ioctl
 };
 
+/*
+* The ioctl() implementation
+*/
+
+int sbull_ioctl (struct block_device *device, fmode_t mode,
+unsigned int cmd, unsigned long arg)
+{
+	long size;
+	struct hd_geometry geo;
+	struct sbull_dev *dev = device->bd_disk->private_data;
+
+	switch(cmd) {
+		case HDIO_GETGEO:
+		/*
+		* Get geometry: since we are a virtual device, we have to make
+		* up something plausible. So we claim 16 sectors, four heads,
+		* and calculate the corresponding number of cylinders. We set the
+		* start of data at sector four.
+		*/
+		size = dev->size*(hardsect_size/KERNEL_SECTOR_SIZE);
+		geo.cylinders = (size & ~0x3f) >> 6;
+		geo.heads = 4;
+		geo.sectors = 16;
+		geo.start = 4;
+		if (copy_to_user((void __user *) arg, &geo, sizeof(geo)))
+			return -EFAULT;
+		return 0;
+	}
+	
+	return -ENOTTY; /* Unknown Command */
+}
+
 
 static void setup_device(struct osurd_dev *dev, int which)
 {
         /* initialize underlying osurd_dev structure */
         memset(dev, 0, sizeof (struct osurd_dev));
         dev->size = nsectors*hardsect_size;
-        dec->data = vmalloc(dev->size);
+        dev->data = vmalloc(dev->size);
         if(dev->data == NULL){
                 printk(KERN_NOTICE "vmalloc failure,\n");
                 return;
         }
 
-        spinlock init(&dev->lock);
+        spinlock_init(&dev->lock);
 
 	/* Set up the timer which unmount/nivalidates a device */
 	init_timer(&dev->timer);
