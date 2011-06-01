@@ -308,12 +308,9 @@ unsigned int cmd, unsigned long arg)
 
 static int osurd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
 {
-	long size;
-        struct hd_geometry geo;
+	long size; 
         struct osurd_dev *dev = device->bd_disk->private_data;
 
-
-        case HDIO_GETGEO:
 	/*
 	* Get geometry: since we are a virtual device, we have to make
 	* up something plausible. So we claim 16 sectors, four heads,
@@ -325,8 +322,6 @@ static int osurd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
 	geo.heads = 4;
 	geo.sectors = 16;
 	geo.start = 4;
-	if (copy_to_user((void __user *) arg, &geo, sizeof(geo)))
-		return -EFAULT;
 	return 0;
 
 }
