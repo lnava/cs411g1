@@ -87,7 +87,7 @@ static struct osurd_dev *Devices = NULL;
 /*
  * Handle an I/O request.
  */
-static void osurd_transfer(static osurd_dev *dev, unsigned long sector,
+static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 		unsigned long nsect, char *buffer, int write)
 {
 	unsigned long offset = sector*KERNEL_SECTOR_SIZE;
@@ -111,22 +111,18 @@ static void osurd_request(struct request_queue *q)
 {
 	struct request *req;
 	
-	while ((req = elev_next_request(q)) != NULL) {
+	while ((req = blk_fetch_request(q)) != NULL) {
 		struct osurd_dev *dev = req->rq_disk->private_data;
 		if(! blk_fs_request(req)) {
 			printk (KERN_NOTICE "Skip non-fs request \n");
-			blk_end_request(req, -EIO, req->current_nr_sectors << 9);
+			blk_end_request_all(req, -EIO);
 			continue;
 		}
-		/* Output for debugging */
-		printk (KERN_NOTICE "Req dev %d dir %ld sec %ld, nr %d f %lx\n",
-				dev - Devices, rq_data_dir(req),
-				req->sector, req->current_nr_sectors,
-				ref->flags);
 		/*  End of debugging output */
-		osurd_transfer(dev, req->sector, req->current_nr_sectors,
+		osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
 				req->buffer, rq_data_dir(req));
-		blk_end_request(req, 1, req->current_nr_sectors << 9);
+		if( !__blk_end_request_cur(req, 0))
+			req = blk_fetch_request(q);
 	}
 }
 
@@ -142,9 +138,9 @@ static int osurd_xfer_bio(struct osurd_dev *dev, struct bio *bio)
 	/* Do each segment independently. */
 	bio_for_each_segment(bvec, bio, i) {
 		char *buffer = __bio_kmap_atomic(bio, i, KM_USER0);
-		osurd_transfer(dev, sector, bio_cur_sectors(bio),
+		osurd_transfer(dev, sector, bio_cur_bytes(bio)>>9,
 				buffer, bio_data_dir(bio) == WRITE);
-		sector += bio_cur_sectors(bio);
+		sector += bio_cur_bytes(bio)>>9;
 		__bio_kunmap_atomic(bio, KM_USER0);
 	}
 	return 0; /* Always "succeed" */
@@ -181,15 +177,15 @@ static void osurd_full_request(struct request_queue *q)
 	int sectors_xferred;
 	struct osurd_dev *dev = q->queuedata;
 	
-	while( (req = elv_next_request(q)) != NULL ) {
+	while( (req = blk_fetch_request(q)) != NULL ) {
 		if (! blk_fs_request(req) ) {
 			printk (KERN_NOTICE "Skip non-fs request\n");
-			end_request(req, 0);
+			__blk_end_request_all(req, -EIO);
 			continue;
 		}
-		sectors_xferred = odurd_xfer_request(dev, req);
-		__blk_end_request (req, 1, sectors_xferred << 9);
-		/* The above includes a call to add_disk_randomness(). */
+		sectors_xferred = osurd_xfer_request(dev, req);
+		if (!__blk_end_request_cur(req, 0))
+			blk_fetch_request(q);
 	}
 }
 
@@ -235,7 +231,7 @@ static int osurd_release(struct gendisk *disk, fmode_t mode)
 		dev->timer.expires = jiffies + INVALIDATE_DELAY;
 		add_timer(&dev->timer);
 	}
-	spin_unlock(&dev->lock);i
+	spin_unlock(&dev->lock);
 
 	return 0;
 }
