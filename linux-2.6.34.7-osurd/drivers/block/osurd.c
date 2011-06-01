@@ -283,7 +283,7 @@ unsigned int cmd, unsigned long arg)
 {
         long size;
         struct hd_geometry geo;
-        struct sbull_dev *dev = device->bd_disk->private_data;
+        struct osurd_dev *dev = device->bd_disk->private_data;
 
         switch(cmd) {
                 case HDIO_GETGEO:
