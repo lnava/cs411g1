@@ -6,6 +6,7 @@
  * Code modified from http://www.cs.fsu.edu/~baker/devices/lxr/http/source/ldd-examples/osurd/osurd.c
  */
 
+#include <linux/config.h>
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/init.h>
