@@ -18,7 +18,8 @@ if BLK_DEV
 config OSU_RD
 	tristate "Oregon State U Ramdisk"
 	---help---
-	<add help info here>
+	This is the ram disk that is implemeted using the most basic of
+	drivers.  IT is implemented in drivers/block/osurd.c
 
 config BLK_DEV_FD
 	tristate "Normal floppy disk support"
