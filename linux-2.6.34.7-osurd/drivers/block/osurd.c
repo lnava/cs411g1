@@ -292,7 +292,7 @@ unsigned int cmd, unsigned long arg)
                 * and calculate the corresponding number of cylinders. We set the
                 * start of data at sector four.
                 */
-                size = dev->size*(hardsect_size/KERNEL_SECTOR_SIZE);
+                size = dev->size * (hardsect_size/KERNEL_SECTOR_SIZE);
                 geo.cylinders = (size & ~0x3f) >> 6;
                 geo.heads = 4;
                 geo.sectors = 16;
@@ -329,7 +329,7 @@ static void setup_device(struct osurd_dev *dev, int which)
                 return;
         }
 
-        spinlock_init(&dev->lock);
+        spin_lock_init(&dev->lock);
 
 	/* Set up the timer which unmount/nivalidates a device */
 	init_timer(&dev->timer);
@@ -364,7 +364,7 @@ static void setup_device(struct osurd_dev *dev, int which)
 				goto out_vfree;
 			break;
 	}
-	blk_queue_hardsect_size(dev->queue, hardsect_size);
+	blk_queue_logical_block_size(dev->queue, hardsect_size);
 	dev->queue->queuedata = dev;
         
         /* initializing gendisk structure */
