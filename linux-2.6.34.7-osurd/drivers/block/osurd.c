@@ -318,10 +318,10 @@ static int osurd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
 	* start of data at sector four.
 	*/
 	size = dev->size * (hardsect_size/KERNEL_SECTOR_SIZE);
-	geo.cylinders = (size & ~0x3f) >> 6;
-	geo.heads = 4;
-	geo.sectors = 16;
-	geo.start = 4;
+	*geo.cylinders = (size & ~0x3f) >> 6;
+	*geo.heads = 4;
+	*geo.sectors = 16;
+	*geo.start = 4;
 	return 0;
 
 }
