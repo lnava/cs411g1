@@ -44,7 +44,7 @@ module_param(ndevices, int, 0);
 enum {
 	RM_SIMPLE = 0, /* The extra-simple request function */
 	RM_FULL = 1,   /* The full-blown version */
-	RM_NO_QUEUE = 2, /* Use make_request */
+	RM_NOQUEUE = 2, /* Use make_request */
 };
 
 static int request_mode = RM_SIMPLE;
@@ -277,6 +277,36 @@ void osurd_invalidate(unsigned long ldev)
 	spin_unlock(&dev->lock);
 }
 
+int sbull_ioctl (struct block_device *device, fmode_t mode,
+unsigned int cmd, unsigned long arg)
+{
+        long size;
+        struct hd_geometry geo;
+        struct sbull_dev *dev = device->bd_disk->private_data;
+
+        switch(cmd) {
+                case HDIO_GETGEO:
+                /*
+                * Get geometry: since we are a virtual device, we have to make
+                * up something plausible. So we claim 16 sectors, four heads,
+                * and calculate the corresponding number of cylinders. We set the
+                * start of data at sector four.
+                */
+                size = dev->size*(hardsect_size/KERNEL_SECTOR_SIZE);
+                geo.cylinders = (size & ~0x3f) >> 6;
+                geo.heads = 4;
+                geo.sectors = 16;
+                geo.start = 4;
+                if (copy_to_user((void __user *) arg, &geo, sizeof(geo)))
+                        return -EFAULT;
+                return 0;
+        }
+
+        return -ENOTTY; /* Unknown Command */
+}
+
+
+
 /* The device operations structure */
 static struct block_device_operations osurd_ops = {
 	.owner		= THIS_MODULE,
@@ -286,38 +316,6 @@ static struct block_device_operations osurd_ops = {
 	.revalidate_disk= osurd_revalidate,
 	.ioctl		= osurd_ioctl
 };
-
-/*
-* The ioctl() implementation
-*/
-
-int sbull_ioctl (struct block_device *device, fmode_t mode,
-unsigned int cmd, unsigned long arg)
-{
-	long size;
-	struct hd_geometry geo;
-	struct sbull_dev *dev = device->bd_disk->private_data;
-
-	switch(cmd) {
-		case HDIO_GETGEO:
-		/*
-		* Get geometry: since we are a virtual device, we have to make
-		* up something plausible. So we claim 16 sectors, four heads,
-		* and calculate the corresponding number of cylinders. We set the
-		* start of data at sector four.
-		*/
-		size = dev->size*(hardsect_size/KERNEL_SECTOR_SIZE);
-		geo.cylinders = (size & ~0x3f) >> 6;
-		geo.heads = 4;
-		geo.sectors = 16;
-		geo.start = 4;
-		if (copy_to_user((void __user *) arg, &geo, sizeof(geo)))
-			return -EFAULT;
-		return 0;
-	}
-	
-	return -ENOTTY; /* Unknown Command */
-}
 
 
 static void setup_device(struct osurd_dev *dev, int which)
@@ -351,7 +349,7 @@ static void setup_device(struct osurd_dev *dev, int which)
 			break;
 		
 		case RM_FULL:
-			dev->queue - blk_inti_queue(sbull_full_request, &dev->lock)l
+			dev->queue - blk_init_queue(osurd_full_request, &dev->lock);
 			if(dev->queeu == NULL)
 				goto v_free;
 			break;
@@ -366,8 +364,8 @@ static void setup_device(struct osurd_dev *dev, int which)
 				goto out_vfree;
 			break;
 	}
-	blk_queue_hradsect_size(dev->queue, hardsect_size);
-	dev->queue-queuedata = dev;
+	blk_queue_hardsect_size(dev->queue, hardsect_size);
+	dev->queue->queuedata = dev;
         
         /* initializing gendisk structure */
         dev->gd = alloc_disk(OSURD_MINORS);
@@ -376,7 +374,7 @@ static void setup_device(struct osurd_dev *dev, int which)
                goto out_vfree;
         }
         dev->gd->major = osurd_major;
-        dev->gd->first_minor = which*SBULL_MINORS;
+        dev->gd->first_minor = which*OSURD_MINORS;
         dev->gd->&osurd_ops;
         dev->gd->queue = dev->queue;
         dev->gd->private_data = dev;
@@ -410,14 +408,14 @@ static int __init osurd_init(void)
 	/* allocate the device array and initialize each one. */
 	Devices = kmalloc(ndevices*sizeof (struct osurd_dev), GFP_KERNEL);
 	if (Devices == NULL)
-		goto our_unregister;
+		goto out_unregister;
 	for (i = 0; i< ndevices; i++)
 		setup_device(Devices+i, i);
 	return 0;
 
   out_unregister:
 	unregister_blkdev(osurd_major, "sbd");
-	reutrn -ENOMEM;
+	return -ENOMEM;
 	
 }
 
@@ -437,13 +435,13 @@ static void sbull_exit(void)
 				kobject_put (&dev->queue->kobj);
 				/* blk_put_queue() is no longer an exported symbol */
 			else
-				blk_cleanip_queue(dev->queue);
+				blk_cleanup_queue(dev->queue);
 		}
 		if(dev->data)
 			vfree(dev->data);
 	}
 	unregister_blkdev(osurd_major, "osurd");
-	kree(Devices);
+	kfree(Devices);
 }
 
 module_init(osurd_init);
