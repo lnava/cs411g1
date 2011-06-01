@@ -160,7 +160,7 @@ static int osurd_xfer_request(struct osurd_dev *dev, struct request *req)
 		sector_t sector = iter.bio->bi_sector;
 		osurd_transfer(dev, sector, bio_cur_bytes(iter.bio)>>9,
 				buffer, bio_data_dir(iter.bio) == WRITE);
-		sector += bio_cur_sectors(iter.bio);
+		sector += bio_cur_bytes(iter.bio)>>9;
 		__bio_kunmap_atomic(iter.bio, KM_USER0);
 		nsect += iter.bio->bi_size/KERNEL_SECTOR_SIZE;
 	}
@@ -277,7 +277,7 @@ void osurd_invalidate(unsigned long ldev)
 	spin_unlock(&dev->lock);
 }
 
-int sbull_ioctl (struct block_device *device, fmode_t mode,
+int osurd_ioctl (struct block_device *device, fmode_t mode,
 unsigned int cmd, unsigned long arg)
 {
         long size;
@@ -349,9 +349,9 @@ static void setup_device(struct osurd_dev *dev, int which)
 			break;
 		
 		case RM_FULL:
-			dev->queue - blk_init_queue(osurd_full_request, &dev->lock);
-			if(dev->queeu == NULL)
-				goto v_free;
+			dev->queue = blk_init_queue(osurd_full_request, &dev->lock);
+			if(dev->queue == NULL)
+				goto out_vfree;
 			break;
 
 		default:
@@ -359,7 +359,7 @@ static void setup_device(struct osurd_dev *dev, int which)
 			/*falls into...*/
 
 		case RM_SIMPLE:
-			dev->queue = blk_inti_queue(osurd_request, &dev->lock);
+			dev->queue = blk_init_queue(osurd_request, &dev->lock);
 			if(dev->queue == NULL)
 				goto out_vfree;
 			break;
@@ -375,7 +375,7 @@ static void setup_device(struct osurd_dev *dev, int which)
         }
         dev->gd->major = osurd_major;
         dev->gd->first_minor = which*OSURD_MINORS;
-        dev->gd->&osurd_ops;
+        dev->gd->fops = &osurd_ops;
         dev->gd->queue = dev->queue;
         dev->gd->private_data = dev;
 
@@ -399,7 +399,7 @@ static int __init osurd_init(void)
 	/*
 	 * Get registered.
 	 */
-	ousrd_major = register_blkdev(osurd_major, "osurd");
+	osurd_major = register_blkdev(osurd_major, "osurd");
         if (osurd_major <= 0){
                 printk(KERN_WARNING "osurd: unable to get major number\n");
                 return -EBUSY;
@@ -419,7 +419,7 @@ static int __init osurd_init(void)
 	
 }
 
-static void sbull_exit(void)
+static void osurd_exit(void)
 {
 	int i;
 	for( i= 0; i<ndevices; i++){
