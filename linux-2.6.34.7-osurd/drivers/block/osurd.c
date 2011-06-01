@@ -306,6 +306,31 @@ unsigned int cmd, unsigned long arg)
         return -ENOTTY; /* Unknown Command */
 }
 
+static int osurd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
+{
+	long size;
+        struct hd_geometry geo;
+        struct osurd_dev *dev = device->bd_disk->private_data;
+
+
+        case HDIO_GETGEO:
+	/*
+	* Get geometry: since we are a virtual device, we have to make
+	* up something plausible. So we claim 16 sectors, four heads,
+	* and calculate the corresponding number of cylinders. We set the
+	* start of data at sector four.
+	*/
+	size = dev->size * (hardsect_size/KERNEL_SECTOR_SIZE);
+	geo.cylinders = (size & ~0x3f) >> 6;
+	geo.heads = 4;
+	geo.sectors = 16;
+	geo.start = 4;
+	if (copy_to_user((void __user *) arg, &geo, sizeof(geo)))
+		return -EFAULT;
+	return 0;
+
+}
+
 
 
 /* The device operations structure */
@@ -315,7 +340,8 @@ static struct block_device_operations osurd_ops = {
 	.release	= osurd_release,
 	.media_changed	= osurd_media_changed,
 	.revalidate_disk= osurd_revalidate,
-	.ioctl		= osurd_ioctl
+	.ioctl		= osurd_ioctl,
+	.getgeo		= osurd_getgeo
 };
 
 
