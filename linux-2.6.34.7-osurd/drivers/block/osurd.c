@@ -309,7 +309,7 @@ unsigned int cmd, unsigned long arg)
 static int osurd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
 {
 	long size; 
-        struct osurd_dev *dev = device->bd_disk->private_data;
+        struct osurd_dev *dev = bdev->bd_disk->private_data;
 
 	/*
 	* Get geometry: since we are a virtual device, we have to make
@@ -318,10 +318,10 @@ static int osurd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
 	* start of data at sector four.
 	*/
 	size = dev->size * (hardsect_size/KERNEL_SECTOR_SIZE);
-	*geo.cylinders = (size & ~0x3f) >> 6;
-	*geo.heads = 4;
-	*geo.sectors = 16;
-	*geo.start = 4;
+	*geo->cylinders = (size & ~0x3f) >> 6;
+	geo->heads = 4;
+	&geo.sectors = 16;
+	&geo->start = 4;
 	return 0;
 
 }
