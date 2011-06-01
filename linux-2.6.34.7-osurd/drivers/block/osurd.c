@@ -114,7 +114,7 @@ static void osurd_request(struct request_queue *q)
 
 	req = blk_fetch_request(q);
 	
-	while ((req != NULL) {
+	while ((req != NULL)) {
 		struct osurd_dev *dev = req->rq_disk->private_data;
 		if(! blk_fs_request(req)) {
 			printk (KERN_NOTICE "Skip non-fs request \n");
