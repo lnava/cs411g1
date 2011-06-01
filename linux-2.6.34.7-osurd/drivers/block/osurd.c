@@ -122,10 +122,10 @@ static void osurd_request(struct request_queue *q)
 			continue;
 		}
 	
-		/* Debuggin printk statements */
+		/* Debuggin printk statements 
 		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\n sector: %ld\n nr: %d\n flags: %lx\n-------\n", dev-Devices, rq_data_dir(req), req->sector, 
 					req->current_nr_sectors, req->flags);
-		/*  End of debugging output */
+		  End of debugging output */
 
 
 		osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
