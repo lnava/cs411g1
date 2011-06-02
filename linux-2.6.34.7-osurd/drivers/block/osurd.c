@@ -160,18 +160,12 @@ static int osurd_xfer_bio(struct osurd_dev *dev, struct bio *bio)
  */
 static int osurd_xfer_request(struct osurd_dev *dev, struct request *req)
 {
-	struct req_iterator iter;
+	struct bio *bio;
 	int nsect = 0;
-	struct bio_vec *bvec;
-
-	rq_for_each_segment(bvec, req, iter) {
-		char *buffer = __bio_kmap_atomic(iter.bio, iter.i, KM_USER0);
-		sector_t sector = iter.bio->bi_sector;
-		osurd_transfer(dev, sector, bio_cur_bytes(iter.bio)>>9,
-				buffer, bio_data_dir(iter.bio) == WRITE);
-		sector += bio_cur_bytes(iter.bio)>>9;
-		__bio_kunmap_atomic(iter.bio, KM_USER0);
-		nsect += iter.bio->bi_size/KERNEL_SECTOR_SIZE;
+	
+	__rq_for_each_bio(bio, req) {
+		osurd_xfer_bio(dev, bio);
+		nsect += bio->bi_size/KERNEL_SECTOR_SIZE;
 	}
 	return nsect;
 }
