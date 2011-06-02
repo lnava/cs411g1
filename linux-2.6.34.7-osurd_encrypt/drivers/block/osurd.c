@@ -1,7 +1,17 @@
-/* Luke Nava
+/* 
+ * CS411 Group 1
+ * Luke Nava
  * Robert Hickman
  * Jonathan Gill
  * Tyler Howe
+ *
+ * OSURD: Oregon State University Ramdisk Module.
+ * A simulated block device driver that creates a bio-aware ramdisk module
+ * for use in the linux kernel.  The code from the website has been modified
+ * to allow for command-line configuration of the crypto key, the retrieval
+ * of the geometry, and the simulated ejection of the disk (this part is extra
+ * credit).  The read and write operations have also been encrypted using the
+ * AES crypto algorithm in the crypto API.
  *
  * Code modified from http://hi.baidu.com/casualfish/blog/item/873696dd599ed9d48d10299e.html
  */
@@ -261,24 +271,6 @@ int osurd_revalidate(struct gendisk *gd)
 	return 0;
 }
 
-/*
-* The "invalidate" function runs out of the device timer; it sets
-* a flag to simulate the removal of the media.
-*/
-/*
-void osurd_invalidate(unsigned long ldev)
-{
-	struct osurd_dev *dev = (struct osurd_dev *) ldev;
-
-	spin_lock(&dev->lock);
-	if (dev->users || !dev->data)
-		printk (KERN_WARNING "osurd: timer sanity check failed\n");
-	else
-		dev->media_change = 1;
-	spin_unlock(&dev->lock);
-}*/
-
-
 /* 
  * Code has been removed from this function to allow getgeo at 
  * the module parameter level 
@@ -348,8 +340,6 @@ static int osurd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
 
 }
 
-
-
 /* The device operations structure */
 static struct block_device_operations osurd_ops = {
 	.owner		= THIS_MODULE,
@@ -361,7 +351,9 @@ static struct block_device_operations osurd_ops = {
 	.getgeo		= osurd_getgeo
 };
 
-
+/*
+ * Setup the device
+ */
 static void setup_device(struct osurd_dev *dev, int which)
 {
         /* initialize underlying osurd_dev structure */
