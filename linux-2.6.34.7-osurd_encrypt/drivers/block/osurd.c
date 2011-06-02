@@ -462,7 +462,7 @@ static int __init osurd_init(void)
 
 	if(sizeof(crypto_key)/sizeof(char) < key_len){
 		printk( KERN_WARNING "key is too short for encryption\n");
-		osurd_exit(void);
+		osurd_exit();
 	}
 	
 	int i;
