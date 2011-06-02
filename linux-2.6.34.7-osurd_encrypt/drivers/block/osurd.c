@@ -16,7 +16,6 @@
 #include <linux/slab.h>		/* kmalloc() */
 #include <linux/fs.h>		/* everything... */
 #include <linux/errno.h>	/* error codes */
-#include <linux/timer.h>
 #include <linux/types.h>	/* size_t */
 #include <linux/fcntl.h>	/* O_ACCMODE */
 #include <linux/hdreg.h>	/* HDIO_GETGEO */
@@ -80,7 +79,6 @@ struct osurd_dev {
 	spinlock_t lock;		/* For mutual exclusion */
 	struct request_queue *queue;	/* The device request queue */
 	struct gendisk *gd;		/* The gendisk structure */
-	struct timer_list timer;	/* For simulate media changes */
 };
 
 static struct osurd_dev *Devices = NULL;
@@ -207,7 +205,7 @@ static int osurd_make_request(struct request_queue *q, struct bio *bio)
 }
 
 /*
- * Open and close
+ * Open
  * 
  * The block device API has changed since the original code was written
  * int (*open) (struct block_device *bdev, fmode_t mode);
@@ -216,7 +214,6 @@ static int osurd_open(struct block_device *bdev, fmode_t mode)
 {
 	struct osurd_dev *dev = bdev->bd_disk->private_data;
 	
-	del_timer_sync(&dev->timer);
 	spin_lock(&dev->lock);
 	if (! dev->users)
 		check_disk_change(bdev);
@@ -225,23 +222,22 @@ static int osurd_open(struct block_device *bdev, fmode_t mode)
 	return 0;
 }
 
+/*
+ * Close the media
+ */
 static int osurd_release(struct gendisk *disk, fmode_t mode)
 {
 	struct osurd_dev *dev = disk->private_data;
 
 	spin_lock(&dev->lock);
 	dev->users--;
-	if(!dev->users) {
-		dev->timer.expires = jiffies + INVALIDATE_DELAY;
-		add_timer(&dev->timer);
-	}
 	spin_unlock(&dev->lock);
 
 	return 0;
 }
 
 /*
- * Look for a (simulated media change
+ * Look for a (simulated) media change
  */
 int osurd_media_changed(struct gendisk *gd)
 {
@@ -269,6 +265,7 @@ int osurd_revalidate(struct gendisk *gd)
 * The "invalidate" function runs out of the device timer; it sets
 * a flag to simulate the removal of the media.
 */
+/*
 void osurd_invalidate(unsigned long ldev)
 {
 	struct osurd_dev *dev = (struct osurd_dev *) ldev;
@@ -279,17 +276,35 @@ void osurd_invalidate(unsigned long ldev)
 	else
 		dev->media_change = 1;
 	spin_unlock(&dev->lock);
-}
+}*/
 
+
+/* 
+ * Code has been removed from this function to allow getgeo at 
+ * the module parameter level 
+ */
 int osurd_ioctl (struct block_device *device, fmode_t mode,
 unsigned int cmd, unsigned long arg)
 {
         /*
 	long size;
-        struct hd_geometry geo;
+        struct hd_geometry geo;*/
         struct osurd_dev *dev = device->bd_disk->private_data;
-	*/
+	
         switch(cmd) {
+		case CDROMEJECT:
+			unsigned int ret_code = 0;
+			spin_lock(&dev->lock);
+			if( dev->users > 0 ) {
+				printk(KERN_WARNING "osurd: Eject failed. Users > 0\n");
+				ret_code = -EBUSY;
+			}
+			else {
+				dev->media_change = 1;
+			}
+			spin_unlock(&dev->lock);
+			return ret_code;
+			
                /*
 		 case HDIO_GETGEO:
                 *
@@ -359,11 +374,6 @@ static void setup_device(struct osurd_dev *dev, int which)
         }
 
         spin_lock_init(&dev->lock);
-
-	/* Set up the timer which unmount/nivalidates a device */
-	init_timer(&dev->timer);
-	dev->timer.data = (unsigned long) dev;
-	dev->timer.function = osurd_invalidate;
 
 	/*
 	 * The I/O queue, depending on whether we are using our own
@@ -454,7 +464,6 @@ static void osurd_exit(void)
 	for( i= 0; i<ndevices; i++){
 		struct osurd_dev *dev = Devices + i;
 
-		del_timer_sync(&dev->timer);
 		if(dev->gd) {
 			del_gendisk(dev->gd);
 			put_disk(dev->gd);
