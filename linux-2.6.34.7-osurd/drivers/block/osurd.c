@@ -3,7 +3,7 @@
  * Jonathan Gill
  * Tyler Howe
  *
- * Code modified from http://www.cs.fsu.edu/~baker/devices/lxr/http/source/ldd-examples/osurd/osurd.c
+ * Code modified from http://hi.baidu.com/casualfish/blog/item/873696dd599ed9d48d10299e.html
  */
 
 
