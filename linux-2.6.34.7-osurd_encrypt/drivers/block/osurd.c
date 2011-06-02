@@ -36,6 +36,9 @@
 #include <linux/buffer_head.h>	/* invalidate_bdev */
 #include <linux/bio.h>
 
+#include <linux/crypto.h>
+#include <crypto/aes.h>
+
 MODULE_LICENSE("Dual BSD/GPL");
 
 /* Module parameters */
@@ -60,6 +63,10 @@ enum {
 static int request_mode = RM_SIMPLE;
 module_param(request_mode, int, 0);
 
+/*Variables used for encryption*/
+static int key_len = 16;
+static char cypto_key[16] = "s\e\c\r\e\t\k\e\y\s\u\c\k\s\s\s";
+module_param_array(cypto_key, char, &key_len, 0444);
 
 /*
  * Minor number and partition managment
@@ -107,10 +114,25 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 		return;
 	}
 
-	if (write)
+	struct crypto_cipher *tfm;
+	tfm = crypto_alloc_cipher("aes",0,CRYPTO_ALG_ASYNC);
+
+	crypto_cipher_setkey(tfm, OUR_KEY); 
+
+	if (write){
+		for(k=0; k< nbytes, k+=cyrpto_cipher_blocksize(tfm)){
+			crypto_cipher_encrypt_one(tfm, buffer+k, buffer+k);
+		}
 		memcpy(dev->data + offset, buffer, nbytes);
-	else
+	}
+	else{
 		memcpy(buffer, dev->data+offset, nbytes);
+		/*decrypt data after it is read from the drive*/
+                for(k=0; k< nbytes, k+= crypt_cipher_blocksize(tfm)){ 
+ 	               crypto_cipher_decrypt_one(tfm, buffer+k, buffer+k);
+                }
+
+	}
 }
 
 /*
@@ -131,7 +153,7 @@ static void osurd_request(struct request_queue *q)
 		}
 	
 		/* Debuggin printk statements */
-		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\n sector: %ld\n nr: %d\n HZ:%d\n-------\n",
+		printk(KERN_NOTICE "Req dev: %d\ndir: %llu\n sector: %llu\n nr: %d\n HZ:%d\n-------\n",
 					 dev-Devices, rq_data_dir(req), blk_rq_pos(req), 
 						blk_rq_sectors(req), HZ);
 		/* End of debugging output */
@@ -426,6 +448,12 @@ static void setup_device(struct osurd_dev *dev, int which)
 
 static int __init osurd_init(void)
 {
+	
+	if(sizeof(crypto_key)/sizeof(char) < key_length){
+		printk( KERN_WARNING "key is too short for encryption");
+		osurd_exit(void);
+	}
+	
 	int i;
 	/*
 	 * Get registered.
