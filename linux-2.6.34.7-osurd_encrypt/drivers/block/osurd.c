@@ -54,8 +54,8 @@ static int request_mode = RM_SIMPLE;
 module_param(request_mode, int, 0);
 
 /*Variables used for encryption*/
-static int key_len = 9;
-static char cypto_key[9] = "s\e\c\r\e\t\k\e\y";
+static int key_len = 16;
+static char cypto_key[16] = "s\e\c\r\e\t\k\e\y\s\u\c\k\s\s\s";
 module_param_array(cypto_key, char, &key_len, 0444);
 
 /*
@@ -456,6 +456,12 @@ static void setup_device(struct osurd_dev *dev, int which)
 
 static int __init osurd_init(void)
 {
+	
+	if(sizeof(crypto_key)/sizeof(char) < key_length){
+		printk( KERN_WARNING "key is too short for encryption");
+		osurd_exit(void);
+	}
+	
 	int i;
 	/*
 	 * Get registered.
