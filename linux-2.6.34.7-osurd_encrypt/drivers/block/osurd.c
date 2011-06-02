@@ -123,9 +123,9 @@ static void osurd_request(struct request_queue *q)
 		}
 	
 		/* Debuggin printk statements */
-		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\n sector: %ld\n nr: %d\n flags: %lx\n HZ:%d\n-------\n",
-					 dev-Devices, rq_data_dir(req), req->sector, 
-						req->current_nr_sectors, req->flags);
+		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\n sector: %ld\n nr: %d\n HZ:%d\n-------\n",
+					 dev-Devices, rq_data_dir(req), blk_rq_pos(req), 
+						blk_rq_sectors(req), HZ);
 		/* End of debugging output */
 
 
