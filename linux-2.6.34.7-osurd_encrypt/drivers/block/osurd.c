@@ -70,8 +70,8 @@ module_param(request_mode, int, 0);
 
 /*Variables used for encryption*/
 struct crypto_cipher *tfm;
-static int key_len = 16;
-static char crypto_key[16] = "\xdf\xa6\xbf\x4d\xed\x81\xdb\x03\xff\xca\xff\x95\xf8\x30\xf0\x61";
+static int key_len = 8;
+static char crypto_key[8] = "\xdf\xa6\xbf\x4d\xed\x81\xdb\x61";
 module_param_array(crypto_key, byte, &key_len, 0444);
 
 /*
