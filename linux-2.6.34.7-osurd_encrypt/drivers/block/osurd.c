@@ -157,6 +157,8 @@ static void osurd_request(struct request_queue *q)
 {
 	struct request *req;
 	//int req_size;
+	
+	printk( KERN_NOTICE "Beginning request...\n");
 
 	req = blk_fetch_request(q);
 	
