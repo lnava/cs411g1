@@ -462,9 +462,10 @@ static int __init osurd_init(void)
 		printk( KERN_WARNING "key is too short for encryption\n");
 		osurd_exit();
 	}
-	*/
+
 	tfm = crypto_alloc_cipher("aes", 0, 0);
 	crypto_cipher_setkey(tfm, crypto_key, key_len);
+	*/
 	/*
 	 * Get registered.
 	 */
@@ -495,7 +496,7 @@ static int __init osurd_init(void)
 static void osurd_exit(void)
 {
 	int i;
-	crypto_free_cipher(tfm);
+	/*crypto_free_cipher(tfm);*/
 	for( i= 0; i<ndevices; i++){
 		struct osurd_dev *dev = Devices + i;
 
