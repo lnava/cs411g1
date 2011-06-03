@@ -57,7 +57,7 @@ module_param(request_mode, int, 0);
 
 /*Variables used for encryption*/
 static int key_len = 16;
-static unsigned char crypto_key[16] = 'secretkeysucksss';
+static unsigned char crypto_key[16] = 's','e','c','r','e','t','k','e','y','s','u','c','k','s','s','s';
 module_param_array(crypto_key, byte, &key_len, 0444);
 
 /*
@@ -121,7 +121,7 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
 		/*decrypt data after it is read from the drive*/
-                for(k=0; k< nbytes, k+= crypto_cipher_blocksize(tfm)){ 
+                for(k=0; k< nbytes; k+= crypto_cipher_blocksize(tfm)){ 
  	               crypto_cipher_decrypt_one(tfm, buffer+k, buffer+k);
                 }
 
