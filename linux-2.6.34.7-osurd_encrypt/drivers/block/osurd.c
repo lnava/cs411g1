@@ -303,9 +303,6 @@ int osurd_revalidate(struct gendisk *gd)
 int osurd_ioctl (struct block_device *device, fmode_t mode,
 unsigned int cmd, unsigned long arg)
 {
-        /*
-	long size;
-        struct hd_geometry geo;*/
         struct osurd_dev *dev = device->bd_disk->private_data;
 	unsigned int ret_code = 0;
         
@@ -321,48 +318,28 @@ unsigned int cmd, unsigned long arg)
 			}
 			spin_unlock(&dev->lock);
 			return ret_code;
-			
-               /*
-		 case HDIO_GETGEO:
-                *
-                * Get geometry: since we are a virtual device, we have to make
-                * up something plausible. So we claim 16 sectors, four heads,
-                * and calculate the corresponding number of cylinders. We set the
-                * start of data at sector four.
-                */
-		/*
-                size = dev->size * (hardsect_size/KERNEL_SECTOR_SIZE);
-                geo.cylinders = (size & ~0x3f) >> 6;
-                geo.heads = 4;
-                geo.sectors = 16;
-                geo.start = 4;
-                if (copy_to_user((void __user *) arg, &geo, sizeof(geo)))
-                        return -EFAULT;
-                return 0;
-       		*/
 	 }
 
         return -ENOTTY; /* Unknown Command */
 }
 
+/*
+ * Get geometry: since we are a virtual device, we have to make
+ * up something plausible. So we claim 16 sectors, four heads,
+ * and calculate the corresponding number of cylinders. We set the
+ * start of data at sector four.
+ */
 static int osurd_getgeo(struct block_device *bdev, struct hd_geometry *geo)
 {
 	long size; 
         struct osurd_dev *dev = bdev->bd_disk->private_data;
 
-	/*
-	* Get geometry: since we are a virtual device, we have to make
-	* up something plausible. So we claim 16 sectors, four heads,
-	* and calculate the corresponding number of cylinders. We set the
-	* start of data at sector four.
-	*/
 	size = dev->size * (hardsect_size/KERNEL_SECTOR_SIZE);
 	geo->cylinders = (size & ~0x3f) >> 6;
 	geo->heads = 4;
 	geo->sectors = 16;
 	geo->start = 4;
 	return 0;
-
 }
 
 /* The device operations structure */
@@ -443,12 +420,12 @@ static void setup_device(struct osurd_dev *dev, int which)
   out_vfree:
 	if(dev->data)
 		vfree(dev->data);
-
-
 }
 
-
-
+/*
+ * Init
+ * Register the device and check module params.
+ */
 static int __init osurd_init(void)
 {
 	int i;
@@ -481,6 +458,10 @@ static int __init osurd_init(void)
 	
 }
 
+/*
+ * Exit:
+ * Closed the module and frees up resources
+ */
 static void osurd_exit(void)
 {
 	int i;
