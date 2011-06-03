@@ -121,12 +121,12 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	}
 
 	if (write){
-		osurd_encrypt(buffer, nbytes, write);
+		//osurd_encrypt(buffer, nbytes, write);
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
-		osurd_encrypt(buffer, nbytes, write);
+		//osurd_encrypt(buffer, nbytes, write);
 	}
 }
 
@@ -134,17 +134,14 @@ static void osurd_encrypt(char *data, int len, int enc)
 {
         int k;
 
-	printk("DATA IN: %c\n", data);
 	if(enc){
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_encrypt_one(tfm, data+k, data+k);
 		}
-		printk("ENCRYPTED: %c\n", data);
 	}else{
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_decrypt_one(tfm, data+k, data+k);
 		}
-		printk("DECRYPTED: %c\n", data);
 	}
 	return;
 }
@@ -155,7 +152,6 @@ static void osurd_encrypt(char *data, int len, int enc)
 static void osurd_request(struct request_queue *q)
 {
 	struct request *req;
-      //  char *data;
 	//int req_size;
 
 	req = blk_fetch_request(q);
@@ -170,7 +166,6 @@ static void osurd_request(struct request_queue *q)
 	
 
 		//req_size = blk_rq_cur_sectors(req)*KERNEL_SECTOR_SIZE;
-                //data = kmalloc(req_size, GFP_KERNEL);
 
 		/* Debuggin printk statements */
 		printk(KERN_NOTICE "Req dev: %d\ndir: %llu\n sector: %llu\n nr: %d\n HZ:%d\n-------\n",
@@ -179,9 +174,8 @@ static void osurd_request(struct request_queue *q)
 		/* End of debugging output */
 
 		if(rq_data_dir(req)){
-			//memcpy(data, req->buffer, req_size);
                 	
-			/*osurd_encrypt(data, req_size, 1); *//* encrypt */ 
+			osurd_encrypt(req->buffer, req_size, 1); /* encrypt */ 
 
 			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
 				req->buffer, rq_data_dir(req));
@@ -189,9 +183,8 @@ static void osurd_request(struct request_queue *q)
 			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
 				req->buffer, rq_data_dir(req));
                         
-			/*osurd_encrypt(data, req_size, 0); *//* decrypt */
+			osurd_encrypt(req->buffer, req_size, 0); /* decrypt */
 			
-			//memcpy(req->buffer, data, req_size);
 		}
 
 		if( !__blk_end_request_cur(req, 0))
