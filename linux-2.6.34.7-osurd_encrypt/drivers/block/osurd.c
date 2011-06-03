@@ -121,12 +121,12 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	}
 
 	if (write){
-		//osurd_encrypt(buffer, nbytes, write); /* encrypt */
+		osurd_encrypt(buffer, nbytes, write); /* encrypt */
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
-		//osurd_encrypt(buffer, nbytes, write); /* decrypt */
+		osurd_encrypt(buffer, nbytes, write); /* decrypt */
 	}
 }
 
@@ -136,11 +136,11 @@ static void osurd_encrypt(char *data, int len, int enc)
 
 	if(enc){
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
-			crypto_cipher_encrypt_one(tfm, data+k, data+k);
+			crypto_cipher_encrypt_one(tfm, data + k, data + k);
 		}
 	}else{
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
-			crypto_cipher_decrypt_one(tfm, data+k, data+k);
+			crypto_cipher_decrypt_one(tfm, data + k, data + k);
 		}
 	}
 	return;
