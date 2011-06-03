@@ -151,6 +151,9 @@ static void osurd_encrypt(char *data, int len, int enc)
 static void osurd_request(struct request_queue *q)
 {
 	struct request *req;
+        void *data;
+        char *xbuf[XBUFSIZE];
+	int req_size;
 
 	req = blk_fetch_request(q);
 	
@@ -162,17 +165,34 @@ static void osurd_request(struct request_queue *q)
 			continue;
 		}
 	
+		if( !__blk_end_request_cur(req, 0))
+			req = blk_fetch_request(q);
+
+		req_size = blk_rq_cur_sectors(req)*KERNEL_SECTOR_SIZE;
+
 		/* Debuggin printk statements */
 		printk(KERN_NOTICE "Req dev: %d\ndir: %llu\n sector: %llu\n nr: %d\n HZ:%d\n-------\n",
 					 dev-Devices, rq_data_dir(req), (long long unsigned)blk_rq_pos(req), 
 						blk_rq_sectors(req), HZ);
 		/* End of debugging output */
 
+		data = xbuf[0];
+                
+		if(rq_data_dir(req)){
+			memcopy(data, req->data, req_size);
+                	
+			osurd_encrypt(data, req_size, 1); //encrypt 
 
-		osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
+			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
 				req->buffer, rq_data_dir(req));
-		if( !__blk_end_request_cur(req, 0))
-			req = blk_fetch_request(q);
+	        } else {
+			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
+				req->buffer, rq_data_dir(req));
+                        
+			osurd_encrypt(data, req_size, 0); //decrypt
+			
+			memcpy(req->buffer, data, req_size);
+		}
 	}
 }
 
