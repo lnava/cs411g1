@@ -42,7 +42,10 @@
 #include <linux/cdrom.h> /* for the cdrom eject code */
 
 MODULE_LICENSE("Dual BSD/GPL");
+/* function definitions */
 static void osurd_exit(void);
+static void osurd_encrypt(char *data, int len, int enc);
+
 /* Module parameters */
 static int osurd_major = 0;		/* Device major */
 module_param(osurd_major, int, 0);
@@ -68,8 +71,8 @@ module_param(request_mode, int, 0);
 /*Variables used for encryption*/
 struct crypto_cipher *tfm;
 static int key_len = 16;
-static char *crypto_key = "\xdf\xa6\xbf\x4d\xed\x81\xdb\x03\xff\xca\xff\x95\xf8\x30\xf0\x61";
-/*module_param_array(crypto_key, byte, &key_len, 0444);*/
+static char crypto_key[16] = "\xdf\xa6\xbf\x4d\xed\x81\xdb\x03\xff\xca\xff\x95\xf8\x30\xf0\x61";
+module_param_array(crypto_key, byte, &key_len, 0444);
 
 /*
  * Minor number and partition managment
@@ -118,10 +121,12 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	}
 
 	if (write){
+		osurd_encrypt(&buffer, write);
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
+		osurd_encrtypr(&buffer, write);
 	}
 }
 
@@ -176,7 +181,7 @@ static void osurd_request(struct request_queue *q)
 		if(rq_data_dir(req)){
 			memcpy(data, req->buffer, req_size);
                 	
-			osurd_encrypt(data, req_size, 1); //encrypt 
+			/*osurd_encrypt(data, req_size, 1); *//* encrypt */ 
 
 			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
 				req->buffer, rq_data_dir(req));
@@ -184,7 +189,7 @@ static void osurd_request(struct request_queue *q)
 			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
 				req->buffer, rq_data_dir(req));
                         
-			osurd_encrypt(data, req_size, 0); //decrypt
+			/*osurd_encrypt(data, req_size, 0); *//* decrypt */
 			
 			memcpy(req->buffer, data, req_size);
 		}
