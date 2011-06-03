@@ -55,6 +55,8 @@ static int nsectors = 1024;		/* How big thedrive is */
 module_param(nsectors, int, 0);
 static int ndevices = 4;		/* Number of read heads */
 module_param(ndevices, int, 0);
+static int disksize = hardsect_size*nsectors; /* Disk Size */
+module_param(disksize, int, 0);
 
 /*
  * The different "request modes" we can use.
@@ -124,13 +126,13 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	
 	if (write){
 		osurd_encrypt(buffer, nbytes, write); /* encrypt */
-		printk("dir:%u\n DATA ENC:\n",write);
+		printk("dir:%u\n DATA ENC %lu:\n",write,nbytes);
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
 		osurd_encrypt(buffer, nbytes, write); /* decrypt */
-                printk("dir:%u\n DATA DEC:\n",write);
+                printk("dir:%u\n DATA DEC %lu\n",write,nbytes);
 	}
 }
 
@@ -460,7 +462,11 @@ static void setup_device(struct osurd_dev *dev, int which)
 static int __init osurd_init(void)
 {
 	int i;
-	
+
+	nsectors = disksize/hardsect_size;	
+	if(disksize%hardsect_size != 0)
+		nsectors++;
+
 	/* Initialize Crypto info.*/
 	if(sizeof(crypto_key)/sizeof(char) < key_len){
 		printk( KERN_WARNING "key is too short for encryption\n");
