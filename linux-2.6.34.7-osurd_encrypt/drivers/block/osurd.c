@@ -110,32 +110,40 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 {
 	unsigned long offset = sector*KERNEL_SECTOR_SIZE;
 	unsigned long nbytes = nsect*KERNEL_SECTOR_SIZE;
-	int k;	
-	struct crypto_cipher *tfm;
 
 	if((offset + nbytes) > dev->size){
 		printk (KERN_NOTICE "Beyond-end write (%ld %ld)\n", offset, nbytes);
 		return;
 	}
 
-	tfm = crypto_alloc_cipher("aes",0,CRYPTO_ALG_ASYNC);
-
-	crypto_cipher_setkey(tfm, crypto_key, key_len); 
-
 	if (write){
-		for(k=0; k< nbytes; k+=crypto_cipher_blocksize(tfm)){
-			crypto_cipher_encrypt_one(tfm, buffer+k, buffer+k);
-		}
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
-		/*decrypt data after it is read from the drive*/
-                for(k=0; k< nbytes; k+= crypto_cipher_blocksize(tfm)){ 
- 	               crypto_cipher_decrypt_one(tfm, buffer+k, buffer+k);
-                }
-
 	}
+}
+
+static void osurd_encrypt(char *data, int len, int enc)
+{
+
+	struct crypto_cipher *tfm;
+	char *buffer = *data;	
+	
+	tfm = crypto_alloc_cipher("aes", 0, CRYPTO_ALG_ASYNC);
+	crypto_cipher_setkey(tfm, crypto_key, key_len);
+
+	if(enc){
+		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
+			crypto_cipher_encrypt_one(buffer, data+k, data+k);
+		}
+		return;
+	}else{
+		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
+			crypto_cipher_decrypt_one(buffer, data+k, data+k);
+		}
+	}
+	*data = *buffer;
 }
 
 /*
