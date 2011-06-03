@@ -120,17 +120,17 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 		return;
 	}
 
-	printk("dir:%u\n DATA IN: %\n",write,*data);
+	printk("dir:%u\n DATA IN:\n",write);
 	
 	if (write){
 		osurd_encrypt(buffer, nbytes, write); /* encrypt */
-		printk("dir:%u\n DATA ENC: %s\n",write,*data);
+		printk("dir:%u\n DATA ENC:\n",write);
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
 		osurd_encrypt(buffer, nbytes, write); /* decrypt */
-                printk("dir:%u\n DATA DEC: %s\n",write,*data);
+                printk("dir:%u\n DATA DEC:\n",write);
 	}
 }
 
@@ -172,9 +172,9 @@ static void osurd_request(struct request_queue *q)
 		//req_size = blk_rq_cur_sectors(req)*KERNEL_SECTOR_SIZE;
 
 		/* Debuggin printk statements */
-		printk(KERN_NOTICE "Req dev: %d\ndir: %llu\n sector: %llu\n nr: %d\n HZ:%d\n-------\n",
-					 dev-Devices, rq_data_dir(req), (long long unsigned)blk_rq_pos(req), 
-						blk_rq_sectors(req), HZ);
+		printk(KERN_NOTICE "Req dev: %d\ndir: %d\nsector: %llu\nnr: %llu\n-------\n",
+					 dev-Devices, rq_data_dir(req), blk_rq_pos(req), 
+						blk_rq_sectors(req));
 		/* End of debugging output */
 
 		//if(rq_data_dir(req)){
