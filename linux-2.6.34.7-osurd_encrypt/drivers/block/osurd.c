@@ -121,12 +121,12 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	}
 
 	if (write){
-		osurd_encrypt(&buffer, nbytes, write);
+		osurd_encrypt(buffer, nbytes, write);
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
-		osurd_encrypt(&buffer, nbytes, write);
+		osurd_encrypt(buffer, nbytes, write);
 	}
 }
 
