@@ -459,7 +459,7 @@ static int __init osurd_init(void)
 	}
 	*/
 	tfm = crypto_alloc_cipher("aes", 0, 0);
-	crypto_cipher_setkey(tfm, crypto_key, sizeof(crypto_key));
+	crypto_cipher_setkey(tfm, crypto_key, key_len);
 	/*
 	 * Get registered.
 	 */
