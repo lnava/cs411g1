@@ -134,17 +134,19 @@ static void osurd_encrypt(char *data, int len, int enc)
 {
         int k;
 
-
+	printk("DATA IN: %c\n", data);
 	if(enc){
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_encrypt_one(tfm, data+k, data+k);
 		}
-		return;
+		printk("ENCRYPTED: %c\n", data);
 	}else{
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_decrypt_one(tfm, data+k, data+k);
 		}
+		printk("DECRYPTED: %c\n", data);
 	}
+	return;
 }
 
 /*
