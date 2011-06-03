@@ -120,20 +120,24 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 		return;
 	}
 
+	printk("dir:%u\n DATA IN: %\n",write,*data);
+	
 	if (write){
 		osurd_encrypt(buffer, nbytes, write); /* encrypt */
+		printk("dir:%u\n DATA ENC: %s\n",write,*data);
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
 		osurd_encrypt(buffer, nbytes, write); /* decrypt */
+                printk("dir:%u\n DATA DEC: %s\n",write,*data);
 	}
 }
 
 static void osurd_encrypt(char *data, int len, int enc)
 {
         int k;
-
+	
 	if(enc){
 		for(k=0; k<sizeof(data); k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_encrypt_one(tfm, data + k, data + k);
