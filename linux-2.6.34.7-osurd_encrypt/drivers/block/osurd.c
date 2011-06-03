@@ -128,19 +128,18 @@ static void osurd_encrypt(char *data, int len, int enc)
 {
 
 	struct crypto_cipher *tfm;
-	char *buffer = *data;	
 	
 	tfm = crypto_alloc_cipher("aes", 0, CRYPTO_ALG_ASYNC);
 	crypto_cipher_setkey(tfm, crypto_key, key_len);
 
 	if(enc){
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
-			crypto_cipher_encrypt_one(buffer, data+k, data+k);
+			crypto_cipher_encrypt_one(tfm, data+k, data+k);
 		}
 		return;
 	}else{
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
-			crypto_cipher_decrypt_one(buffer, data+k, data+k);
+			crypto_cipher_decrypt_one(tfm, data+k, data+k);
 		}
 	}
 	*data = *buffer;
