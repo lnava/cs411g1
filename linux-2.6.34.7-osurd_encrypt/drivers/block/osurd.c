@@ -336,7 +336,7 @@ unsigned int cmd, unsigned long arg)
 	
 	printk("OSURD: ioctl received command %u\n", cmd);        
 	switch(cmd) {
-		case CDROMOPENTRAY://CDROMEJECT:
+		case CDROMEJECT:
 			spin_lock(&dev->lock);
 			if( dev->users > 0 ) {
 				printk(KERN_WARNING "osurd: Eject failed. Users > 0\n");
