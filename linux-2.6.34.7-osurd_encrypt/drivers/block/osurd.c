@@ -67,7 +67,7 @@ module_param(request_mode, int, 0);
 
 /*Variables used for encryption*/
 static int key_len = 16;
-static unsigned char crypto_key[16] = 'secretkeysucksss';
+static char crypto_key[16] = {'s','e','c','r','e','t','k','e','y','s','u','c','k','s','s','s'};
 module_param_array(crypto_key, byte, &key_len, 0444);
 
 /*
@@ -111,13 +111,13 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	unsigned long offset = sector*KERNEL_SECTOR_SIZE;
 	unsigned long nbytes = nsect*KERNEL_SECTOR_SIZE;
 	int k;	
+	struct crypto_cipher *tfm;
 
 	if((offset + nbytes) > dev->size){
 		printk (KERN_NOTICE "Beyond-end write (%ld %ld)\n", offset, nbytes);
 		return;
 	}
 
-	struct crypto_cipher *tfm;
 	tfm = crypto_alloc_cipher("aes",0,CRYPTO_ALG_ASYNC);
 
 	crypto_cipher_setkey(tfm, crypto_key, key_len); 
@@ -131,7 +131,7 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
 		/*decrypt data after it is read from the drive*/
-                for(k=0; k< nbytes, k+= crypto_cipher_blocksize(tfm)){ 
+                for(k=0; k< nbytes; k+= crypto_cipher_blocksize(tfm)){ 
  	               crypto_cipher_decrypt_one(tfm, buffer+k, buffer+k);
                 }
 
@@ -157,7 +157,7 @@ static void osurd_request(struct request_queue *q)
 	
 		/* Debuggin printk statements */
 		printk(KERN_NOTICE "Req dev: %d\ndir: %llu\n sector: %llu\n nr: %d\n HZ:%d\n-------\n",
-					 dev-Devices, rq_data_dir(req), blk_rq_pos(req), 
+					 dev-Devices, rq_data_dir(req), (long long unsigned)blk_rq_pos(req), 
 						blk_rq_sectors(req), HZ);
 		/* End of debugging output */
 
@@ -451,13 +451,13 @@ static void setup_device(struct osurd_dev *dev, int which)
 
 static int __init osurd_init(void)
 {
+	int i;
 
 	if(sizeof(crypto_key)/sizeof(char) < key_len){
 		printk( KERN_WARNING "key is too short for encryption\n");
 		osurd_exit();
 	}
 	
-	int i;
 	/*
 	 * Get registered.
 	 */
