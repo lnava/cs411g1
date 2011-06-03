@@ -121,12 +121,12 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	}
 
 	if (write){
-		//osurd_encrypt(buffer, nbytes, write);
+		osurd_encrypt(buffer, nbytes, write); /* encrypt */
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
-		//osurd_encrypt(buffer, nbytes, write);
+		osurd_encrypt(buffer, nbytes, write); /* decrypt */
 	}
 }
 
@@ -173,19 +173,19 @@ static void osurd_request(struct request_queue *q)
 						blk_rq_sectors(req), HZ);
 		/* End of debugging output */
 
-		if(rq_data_dir(req)){
+		//if(rq_data_dir(req)){
                 	
-			osurd_encrypt(req->buffer, req_size, 1); /* encrypt */ 
+			//osurd_encrypt(req->buffer, req_size, 1); /* encrypt */ 
 
-			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
-				req->buffer, rq_data_dir(req));
-	        } else {
+	//		osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
+	//			req->buffer, rq_data_dir(req));
+	//        } else {
 			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
 				req->buffer, rq_data_dir(req));
                         
-			osurd_encrypt(req->buffer, req_size, 0); /* decrypt */
+			//osurd_encrypt(req->buffer, req_size, 0); /* decrypt */
 			
-		}
+	//	}
 
 		if( !__blk_end_request_cur(req, 0))
 			req = blk_fetch_request(q);
