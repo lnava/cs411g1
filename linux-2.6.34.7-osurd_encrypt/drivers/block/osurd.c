@@ -334,7 +334,8 @@ unsigned int cmd, unsigned long arg)
 {
         struct osurd_dev *dev = device->bd_disk->private_data;
 	unsigned int ret_code = 0;
-        
+	
+	printk("OSURD: ioctl received command %u\n", cmd);        
 	switch(cmd) {
 		case CDROMEJECT:
 			spin_lock(&dev->lock);
