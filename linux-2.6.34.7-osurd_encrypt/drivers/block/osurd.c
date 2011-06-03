@@ -126,9 +126,9 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 
 static void osurd_encrypt(char *data, int len, int enc)
 {
-
+        int k;
 	struct crypto_cipher *tfm;
-	
+
 	tfm = crypto_alloc_cipher("aes", 0, CRYPTO_ALG_ASYNC);
 	crypto_cipher_setkey(tfm, crypto_key, key_len);
 
@@ -142,7 +142,6 @@ static void osurd_encrypt(char *data, int len, int enc)
 			crypto_cipher_decrypt_one(tfm, data+k, data+k);
 		}
 	}
-	*data = *buffer;
 }
 
 /*
@@ -151,8 +150,7 @@ static void osurd_encrypt(char *data, int len, int enc)
 static void osurd_request(struct request_queue *q)
 {
 	struct request *req;
-        void *data;
-        char *xbuf[XBUFSIZE];
+        char *data;
 	int req_size;
 
 	req = blk_fetch_request(q);
@@ -169,6 +167,7 @@ static void osurd_request(struct request_queue *q)
 			req = blk_fetch_request(q);
 
 		req_size = blk_rq_cur_sectors(req)*KERNEL_SECTOR_SIZE;
+                data = kmalloc(req_size, GFP_KERNEL);
 
 		/* Debuggin printk statements */
 		printk(KERN_NOTICE "Req dev: %d\ndir: %llu\n sector: %llu\n nr: %d\n HZ:%d\n-------\n",
@@ -179,7 +178,7 @@ static void osurd_request(struct request_queue *q)
 		data = xbuf[0];
                 
 		if(rq_data_dir(req)){
-			memcopy(data, req->data, req_size);
+			memcpy(data, req->data, req_size);
                 	
 			osurd_encrypt(data, req_size, 1); //encrypt 
 
