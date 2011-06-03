@@ -69,7 +69,7 @@ module_param(request_mode, int, 0);
 struct crypto_cipher *tfm;
 static int key_len = 16;
 static char *crypto_key = "\xdf\xa6\xbf\x4d\xed\x81\xdb\x03\xff\xca\xff\x95\xf8\x30\xf0\x61";
-module_param_array(crypto_key, byte, &key_len, 0444);
+/*module_param_array(crypto_key, byte, &key_len, 0444);*/
 
 /*
  * Minor number and partition managment
