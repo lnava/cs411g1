@@ -66,6 +66,7 @@ static int request_mode = RM_SIMPLE;
 module_param(request_mode, int, 0);
 
 /*Variables used for encryption*/
+struct crypto_cipher *tfm;
 static int key_len = 16;
 static char crypto_key[16] = {'s','e','c','r','e','t','k','e','y','s','u','c','k','s','s','s'};
 module_param_array(crypto_key, byte, &key_len, 0444);
@@ -127,10 +128,7 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 static void osurd_encrypt(char *data, int len, int enc)
 {
         int k;
-	struct crypto_cipher *tfm;
 
-	tfm = crypto_alloc_cipher("aes", 0, CRYPTO_ALG_ASYNC);
-	crypto_cipher_setkey(tfm, crypto_key, key_len);
 
 	if(enc){
 		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
@@ -454,12 +452,14 @@ static int __init osurd_init(void)
 {
 	int i;
 	
-	/*
+	/* Initialize Crypto info.
 	if(sizeof(crypto_key)/sizeof(char) < key_len){
 		printk( KERN_WARNING "key is too short for encryption\n");
 		osurd_exit();
 	}
 	*/
+	tfm = crypto_alloc_cipher("aes", 0, CRYPTO_ALG_ASYNC);
+	crypto_cipher_setkey(tfm, crypto_key, key_len);
 	/*
 	 * Get registered.
 	 */
