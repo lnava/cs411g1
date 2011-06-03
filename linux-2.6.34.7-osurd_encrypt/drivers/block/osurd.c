@@ -38,9 +38,11 @@
 
 #include <linux/crypto.h>
 #include <crypto/aes.h>
+#include <linux/stat.h>
+#include <linux/cdrom.h> /* for the cdrom eject code */
 
 MODULE_LICENSE("Dual BSD/GPL");
-
+static void osurd_exit(void);
 /* Module parameters */
 static int osurd_major = 0;		/* Device major */
 module_param(osurd_major, int, 0);
@@ -65,8 +67,8 @@ module_param(request_mode, int, 0);
 
 /*Variables used for encryption*/
 static int key_len = 16;
-static char cypto_key[16] = "s\e\c\r\e\t\k\e\y\s\u\c\k\s\s\s";
-module_param_array(cypto_key, char, &key_len, 0444);
+static unsigned char crypto_key[16] = 'secretkeysucksss';
+module_param_array(crypto_key, byte, &key_len, 0444);
 
 /*
  * Minor number and partition managment
@@ -108,6 +110,7 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 {
 	unsigned long offset = sector*KERNEL_SECTOR_SIZE;
 	unsigned long nbytes = nsect*KERNEL_SECTOR_SIZE;
+	int k;	
 
 	if((offset + nbytes) > dev->size){
 		printk (KERN_NOTICE "Beyond-end write (%ld %ld)\n", offset, nbytes);
@@ -117,10 +120,10 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	struct crypto_cipher *tfm;
 	tfm = crypto_alloc_cipher("aes",0,CRYPTO_ALG_ASYNC);
 
-	crypto_cipher_setkey(tfm, OUR_KEY); 
+	crypto_cipher_setkey(tfm, crypto_key, key_len); 
 
 	if (write){
-		for(k=0; k< nbytes, k+=cyrpto_cipher_blocksize(tfm)){
+		for(k=0; k< nbytes; k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_encrypt_one(tfm, buffer+k, buffer+k);
 		}
 		memcpy(dev->data + offset, buffer, nbytes);
@@ -128,7 +131,7 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
 		/*decrypt data after it is read from the drive*/
-                for(k=0; k< nbytes, k+= crypt_cipher_blocksize(tfm)){ 
+                for(k=0; k< nbytes, k+= crypto_cipher_blocksize(tfm)){ 
  	               crypto_cipher_decrypt_one(tfm, buffer+k, buffer+k);
                 }
 
@@ -304,10 +307,10 @@ unsigned int cmd, unsigned long arg)
 	long size;
         struct hd_geometry geo;*/
         struct osurd_dev *dev = device->bd_disk->private_data;
-	
-        switch(cmd) {
+	unsigned int ret_code = 0;
+        
+	switch(cmd) {
 		case CDROMEJECT:
-			unsigned int ret_code = 0;
 			spin_lock(&dev->lock);
 			if( dev->users > 0 ) {
 				printk(KERN_WARNING "osurd: Eject failed. Users > 0\n");
@@ -448,10 +451,10 @@ static void setup_device(struct osurd_dev *dev, int which)
 
 static int __init osurd_init(void)
 {
-	
-	if(sizeof(crypto_key)/sizeof(char) < key_length){
-		printk( KERN_WARNING "key is too short for encryption");
-		osurd_exit(void);
+
+	if(sizeof(crypto_key)/sizeof(char) < key_len){
+		printk( KERN_WARNING "key is too short for encryption\n");
+		osurd_exit();
 	}
 	
 	int i;
