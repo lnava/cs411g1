@@ -175,10 +175,8 @@ static void osurd_request(struct request_queue *q)
 						blk_rq_sectors(req), HZ);
 		/* End of debugging output */
 
-		data = xbuf[0];
-                
 		if(rq_data_dir(req)){
-			memcpy(data, req->data, req_size);
+			memcpy(data, req->buffer, req_size);
                 	
 			osurd_encrypt(data, req_size, 1); //encrypt 
 
