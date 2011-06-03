@@ -429,12 +429,13 @@ static void setup_device(struct osurd_dev *dev, int which)
 static int __init osurd_init(void)
 {
 	int i;
-
+	
+	/*
 	if(sizeof(crypto_key)/sizeof(char) < key_len){
 		printk( KERN_WARNING "key is too short for encryption\n");
 		osurd_exit();
 	}
-	
+	*/
 	/*
 	 * Get registered.
 	 */
