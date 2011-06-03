@@ -153,8 +153,8 @@ static void osurd_encrypt(char *data, int len, int enc)
 static void osurd_request(struct request_queue *q)
 {
 	struct request *req;
-        char *data;
-	int req_size;
+      //  char *data;
+	//int req_size;
 
 	req = blk_fetch_request(q);
 	
@@ -166,11 +166,9 @@ static void osurd_request(struct request_queue *q)
 			continue;
 		}
 	
-		if( !__blk_end_request_cur(req, 0))
-			req = blk_fetch_request(q);
 
-		req_size = blk_rq_cur_sectors(req)*KERNEL_SECTOR_SIZE;
-                data = kmalloc(req_size, GFP_KERNEL);
+		//req_size = blk_rq_cur_sectors(req)*KERNEL_SECTOR_SIZE;
+                //data = kmalloc(req_size, GFP_KERNEL);
 
 		/* Debuggin printk statements */
 		printk(KERN_NOTICE "Req dev: %d\ndir: %llu\n sector: %llu\n nr: %d\n HZ:%d\n-------\n",
@@ -179,7 +177,7 @@ static void osurd_request(struct request_queue *q)
 		/* End of debugging output */
 
 		if(rq_data_dir(req)){
-			memcpy(data, req->buffer, req_size);
+			//memcpy(data, req->buffer, req_size);
                 	
 			/*osurd_encrypt(data, req_size, 1); *//* encrypt */ 
 
@@ -191,8 +189,12 @@ static void osurd_request(struct request_queue *q)
                         
 			/*osurd_encrypt(data, req_size, 0); *//* decrypt */
 			
-			memcpy(req->buffer, data, req_size);
+			//memcpy(req->buffer, data, req_size);
 		}
+
+		if( !__blk_end_request_cur(req, 0))
+			req = blk_fetch_request(q);
+
 	}
 }
 
