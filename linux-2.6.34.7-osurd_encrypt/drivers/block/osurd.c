@@ -172,7 +172,7 @@ static void osurd_request(struct request_queue *q)
 		//req_size = blk_rq_cur_sectors(req)*KERNEL_SECTOR_SIZE;
 
 		/* Debuggin printk statements */
-		printk(KERN_NOTICE "Req dev: %d\ndir: %d\nsector: %llu\nnr: %llu\n-------\n",
+		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\nsector: %llu\nnr: %llu\n-------\n",
 					 dev-Devices, rq_data_dir(req), blk_rq_pos(req), 
 						blk_rq_sectors(req));
 		/* End of debugging output */
@@ -459,12 +459,11 @@ static int __init osurd_init(void)
 {
 	int i;
 	
-	/* Initialize Crypto info.
+	/* Initialize Crypto info.*/
 	if(sizeof(crypto_key)/sizeof(char) < key_len){
 		printk( KERN_WARNING "key is too short for encryption\n");
 		osurd_exit();
 	}
-	*/
 
 	tfm = crypto_alloc_cipher("aes", 0, 0);
 	crypto_cipher_setkey(tfm, crypto_key, key_len);
