@@ -135,11 +135,11 @@ static void osurd_encrypt(char *data, int len, int enc)
         int k;
 
 	if(enc){
-		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
+		for(k=0; k<sizeof(data); k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_encrypt_one(tfm, data + k, data + k);
 		}
 	}else{
-		for(k=0; k<len; k+=crypto_cipher_blocksize(tfm)){
+		for(k=0; k<sizeof(data); k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_decrypt_one(tfm, data + k, data + k);
 		}
 	}
