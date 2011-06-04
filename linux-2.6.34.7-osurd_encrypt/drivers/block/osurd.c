@@ -28,7 +28,7 @@
 #include <linux/errno.h>	/* error codes */
 #include <linux/types.h>	/* size_t */
 #include <linux/fcntl.h>	/* O_ACCMODE */
-#include <linux/hdreg.h>	/* HDIO_GETGEO */
+//#include <linux/hdreg.h>	/* HDIO_GETGEO */
 #include <linux/kdev_t.h>
 #include <linux/vmalloc.h>
 #include <linux/genhd.h>
@@ -124,6 +124,11 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 
 	printk("dir:%u\n DATA IN:\n",write);
 	
+	/* 
+	 * The encrypt and decrypt data functions are implemented but break the ramdisk
+	 * when a filesystem is mounted on the disk.
+	 * They are commented out so the ramdisk operates correctly without encryption.
+	 */
 	if (write){
 		//osurd_encrypt(buffer, nbytes, write); /* encrypt */
 		memcpy(dev->data + offset, buffer, nbytes);
@@ -134,15 +139,21 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	}
 }
 
+/*
+ * Encrypt and decrypt data
+ */
 static void osurd_encrypt(char *data, int len, int enc)
 {
         int k;
 	
+	/* Encrypt the data into the buffer */
 	if(enc){
 		for(k=0; k<sizeof(data); k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_encrypt_one(tfm, data + k, data + k);
 		}
-	}else{
+	}
+	/* Decrypt the data from the buffer */
+	else{
 		for(k=0; k<sizeof(data); k+=crypto_cipher_blocksize(tfm)){
 			crypto_cipher_decrypt_one(tfm, data + k, data + k);
 		}
