@@ -55,7 +55,7 @@ static int nsectors = 1024;		/* How big thedrive is */
 module_param(nsectors, int, 0);
 static int ndevices = 4;		/* Number of read heads */
 module_param(ndevices, int, 0);
-static int disksize = hardsect_size*nsectors; /* Disk Size */
+static int disksize = 512*1024; /* Disk Size */
 module_param(disksize, int, 0);
 
 /*
