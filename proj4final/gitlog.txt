@@ -1,0 +1,583 @@
+commit cc19800213264b6cf58f9edd20271f81e4a3102b
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 17:55:32 2011 -0700
+
+    removed removal of header
+
+commit ba2cbf233d52ad84d07126fe3b2225ab84122c9b
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 17:42:15 2011 -0700
+
+    added comments explaining omissions
+
+commit 0e70f344a1931a98c31ef15f96977ef39c411f70
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 17:18:49 2011 -0700
+
+    cleaned up code; removed encrytion calls for now
+
+commit a1a167876315f23c77404daf5499d3a12e3a1f2a
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 17:02:36 2011 -0700
+
+    fixed const init
+
+commit ec844dd76e1ee3e4ddebda384c8fa39ff1491143
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 16:59:29 2011 -0700
+
+    Added more prints, added disksize parameter
+
+commit c6733da9a59982f9ed8bc920aa7d3698bd58e2d7
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 16:36:34 2011 -0700
+
+    added a printk
+
+commit d24429445367d7e46cb6e47cd85bb93f9ef248aa
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 16:21:23 2011 -0700
+
+    fixed formatting of printk statment in request fn, uncommented check that determeines a correct key size
+
+commit ef8d0269d1630a3cabf971c340f40c0b29368141
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 16:07:26 2011 -0700
+
+    CDROMOPENTRAY back to CDROMEJECT
+
+commit fa7e6f67d8ef6dc5e65f4bcf0f89777718641818
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 16:03:57 2011 -0700
+
+    Chagned output of debuggin messages in attmept to make them print
+
+commit acf3dad5033359f11efd021c98d8fb01e064c23b
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 15:55:05 2011 -0700
+
+    Added debugging printstatements in transfer function
+
+commit 1ca5d27e0231f3e31ae14e0727ed152cabba50cd
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 15:48:33 2011 -0700
+
+    changed cdromeject to cdromopentray in ioctl
+
+commit 2bdc0fd1fa344ce2c07722f536339e4a35e81883
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 15:41:27 2011 -0700
+
+    using sizeof(data) for encryption
+
+commit e1748690baa5aa42932fac7f4a5783c02533e9b3
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 15:11:05 2011 -0700
+
+    Put beck in calls to crypto function
+
+commit 5292e0cc7a65b2998d4b80f2edde59a1c2156c45
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 14:56:12 2011 -0700
+
+    Removed calls to encrytion/decryption
+
+commit af1f1e14ad31e05d571c8e4c45a7ab39ef3e6bb6
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 14:48:39 2011 -0700
+
+    moved encryption/decryption back to transfer function
+
+commit cf94b73f452cffe57d0c101c99c7770e6dd269a6
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 14:21:52 2011 -0700
+
+    moved encryption calls to request function
+
+commit c7024f0436ae6807445cc387db31806813669c7b
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 14:10:00 2011 -0700
+
+    added print statments in encrypt function, moved return statement to a better place
+
+commit d5da772606ca163334bb5eb9998850ae35177ab2
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:55:22 2011 -0700
+
+    MAybe fixed things
+
+commit f9965ee845f2902a5eb2de0e8b240268b857aa36
+Merge: eea9910... f329ab1...
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:49:27 2011 -0700
+
+    Merge remote-tracking branch 'origin' into osurd
+
+commit f329ab1bbd7aab71b6b6a525f383c72f8d6961d6
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:49:12 2011 -0700
+
+    put calls to encryption back in osurd_transfer
+
+commit eea9910f04122927d23cdf6ddb24b40d07a7f489
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:49:01 2011 -0700
+
+    added debug for ioctl
+
+commit 159d4ec9176d6faf967ff98dbc964e606cc1f050
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:41:21 2011 -0700
+
+    added the cypher_alloc and set_key back into code
+
+commit cdc9bd7b36df6d94d8f19e75fbdb8c8a21c32b0f
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:32:03 2011 -0700
+
+     fixed shit that was inconsitent with code online
+
+commit e032ba2bed16df3cf6324c886265ca2d8902f46f
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:19:28 2011 -0700
+
+    removed all calls to the crypto api
+
+commit 61a5ddb62718e70adab35aa3eed6d54d984b8a54
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:12:52 2011 -0700
+
+    removed encryption work.  Function exists, but no encryption done
+
+commit 4eb968fab6cca1ba08bf838a627df4a45b530221
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 13:05:41 2011 -0700
+
+    addd static to tfm decleration
+
+commit 6732edef2859eedc95c7155810b05aa060adbf96
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 12:47:32 2011 -0700
+
+    Changed keylength to 8
+
+commit 32af997a276ef548bf9fc2cbe8bec53aaa0b45f9
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 12:40:08 2011 -0700
+
+    spelt osurd_encrypt incorrectly
+
+commit 56494ca7dd93a5cc18b3939e1b5dd872119bec6b
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 12:37:13 2011 -0700
+
+    Put encryption length as nsectos*KERN_SECT_SIZE
+
+commit a27cf68e79deeff91543317a9673dc0a39d9011b
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 12:31:34 2011 -0700
+
+    Put encryption/decryption work back in the transfer function
+
+commit 5e8c612796ea8e26cb0e6fcb2dea15510f732e5f
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 12:25:13 2011 -0700
+
+    Put back in key_len parameter in cipher_set_key
+
+commit 5281a0175b3ce4317332e5a6370eedc1d5ae8362
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 12:18:56 2011 -0700
+
+    Commented out module_param_array for out crypto function
+
+commit 52e9a26aaaf35610c6b003b8e5b1847a52851f9c
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 12:13:01 2011 -0700
+
+    add a crypto_cipher_free in exit() and changed the formating for the key.  Changed key to a pointer type instead of an array
+
+commit dae516b62ffb38fe5ffc9f19813efd25cf7bc85f
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 12:02:22 2011 -0700
+
+    set keysize to sizeof(crypto_key) in crypto_cipher_setkey
+
+commit 286827ef03d8f20cc18c8400334b96e8948f1644
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 11:53:04 2011 -0700
+
+    Changed flags in crypto_alloc_cipher to 0,0)
+
+commit a7ec0a7480ae225ea4f68d9f67f123fae25d3c2f
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Fri Jun 3 11:47:41 2011 -0700
+
+    put crypto_cipher_alloc in te init function.
+
+commit e6141cd6388936f600b10089a54d1d2da7d37e81
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Thu Jun 2 18:38:40 2011 -0700
+
+    changed encryption to run in request
+
+commit a482f15b5557462eef1d4eba39e2a573486c95e2
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Thu Jun 2 18:33:44 2011 -0700
+
+    changed encryption to run in request
+
+commit 338e8a346efc8eef88f429e0126edacb7698d324
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Thu Jun 2 18:28:26 2011 -0700
+
+    changed encryption to run in request
+
+commit fbd09c56d71164c097d88fe5bf62953653062e7a
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 18:06:57 2011 -0700
+
+    put correct parameters to encyptrion/decyption calls
+
+commit 2924d3bb0341a2251c7c3a3b337825a1539a04c2
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 18:04:48 2011 -0700
+
+    moved crypto procedure to its own function
+
+commit 49e1d5b7d3a09d0517962ff510e6cca198aed13a
+Merge: 8b3c95e... 5ce81bb...
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu Jun 2 17:51:40 2011 -0700
+
+    Merge remote branch 'origin' into osurd
+
+commit 8b3c95e817e1b295705440e09ec4b25b1a8c3116
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu Jun 2 17:51:24 2011 -0700
+
+    General code cleanup
+
+commit 5ce81bb542cf9dc3ab377d3191aa95afe283cec6
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 17:20:26 2011 -0700
+
+    commented out modified code in the init function
+
+commit af466f6a2231f6732e85fed059ae7c885e979e35
+Merge: 8faed04... 2c4258c...
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu Jun 2 17:18:49 2011 -0700
+
+    Merge remote branch 'origin' into osurd
+
+commit 2c4258c1c5749348f3ea845ca83439eba1ac379c
+Author: Jonathan Gill <puzzledeu@gmail.com>
+Date:   Thu Jun 2 17:13:32 2011 -0700
+
+    changed an argument from char to byte
+
+commit 3640e64fedd35a8bce1af262eed4204dc3caf04d
+Author: Jonathan Gill <puzzledeu@gmail.com>
+Date:   Thu Jun 2 17:11:18 2011 -0700
+
+    fxing the last of our compiling errors
+
+commit 38938a321e4d03bb846b33f3500f6af041bb8e4c
+Author: Jonathan Gill <puzzledeu@gmail.com>
+Date:   Thu Jun 2 17:05:36 2011 -0700
+
+    fxing the last of our compiling errors
+
+commit 8faed04387f743078e4b5100aa60c85bdf3295a4
+Merge: 5d730eb... 9aa06ef...
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu Jun 2 17:02:05 2011 -0700
+
+    Merge remote branch 'origin' into osurd
+
+commit 9aa06ef4341b161e4bba5437d2571d7611370693
+Author: Jonathan Gill <puzzledeu@gmail.com>
+Date:   Thu Jun 2 16:59:59 2011 -0700
+
+    fixing compiling errors
+
+commit 8cae5ecd37e989a26ad5c7c1924f0b6f5a96f8f7
+Author: Jonathan Gill <puzzledeu@gmail.com>
+Date:   Thu Jun 2 16:59:04 2011 -0700
+
+    fixing compiling errors
+
+commit 20e1c83be838337c2e357e00f28fb2d69048c98f
+Author: Jonathan Gill <puzzledeu@gmail.com>
+Date:   Thu Jun 2 16:50:26 2011 -0700
+
+    fixing compiling errors
+
+commit 5d730eb5d81c09859cf2252fe16cbbbe4f1ea89a
+Merge: 1e60ca9... a8e12e6...
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu Jun 2 16:40:32 2011 -0700
+
+    Merge remote branch 'origin' into osurd
+
+commit 1e60ca98289fb75d2920ef6c63ef7ca5d3d8075c
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu Jun 2 16:40:22 2011 -0700
+
+    updated comment header blocks
+
+commit a8e12e61715acf3190864425b133cdc5441b873e
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 16:33:51 2011 -0700
+
+    added encryption details
+
+commit 05d2d392bb1c9ce00f3a1f0e283a644206efa03f
+Merge: 38a1318... c01d28e...
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 16:27:11 2011 -0700
+
+    Merge remote branch 'origin' into osurd
+
+commit 38a131803ac75dae3c64336c790a1355190ce44c
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 16:26:23 2011 -0700
+
+    working on encyrption and decryption
+
+commit c01d28eca8444eec1ceace41d497077098f18ffd
+Merge: e89037b... 2efc9b1...
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu Jun 2 16:23:16 2011 -0700
+
+    Merge remote branch 'origin' into osurd
+
+commit e89037b9e26d2fd8580dce270e5e6b0850c1f3c8
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Thu Jun 2 16:22:11 2011 -0700
+
+    Added extra credit stuff for ejecting disk
+
+commit 2efc9b1a2f770a12afe5eb1367cb760d0ab5bc4d
+Author: cs411 <cs411@cs411vm.(none)>
+Date:   Thu Jun 2 15:35:37 2011 -0700
+
+    adding the correct config file
+
+commit 6d2017517cb965dbdd1054c4d7d96cbe7225a265
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 13:47:45 2011 -0700
+
+    fixed debugging print statement so that variables are gathered correctly
+
+commit f8cd9da37be10bff8f9eb4749926f9880eceed39
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 13:33:22 2011 -0700
+
+    added to print statment to check HZ value
+
+commit fd4983709379158ca2f4bf237976950b1190a893
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 13:28:06 2011 -0700
+
+    trying to reinsert debugging comments
+
+commit 3cf03dc3f85320fdf5e98f10cce0c6127ed90038
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 12:58:46 2011 -0700
+
+    Moving to the encryption part of the project
+
+commit bdbb418ac5e6fc8f1f068a33ba767919d1ccca66
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 12:27:50 2011 -0700
+
+    finalized version of osurd without encryption
+
+commit a28f36f4b64ea596e9513d037fb00e6e17f0994f
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu Jun 2 12:08:06 2011 -0700
+
+    updated the osurd_xfer_request function to make it work with the current API
+
+commit 88450243528fbea81f84f3eeb3508615f83d3bbc
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 14:05:17 2011 -0700
+
+    commented out printk statement that will no longer compile (Only used for debugging)
+
+commit d2e80e127fdc3cec3c0b6e6096ed9858d3402989
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 14:02:03 2011 -0700
+
+    I'm not even sure.
+
+commit 3f3205e7c9b8ad0bfb2310c34511fee693d9b85a
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 13:54:33 2011 -0700
+
+    added a parenthesis that was accidently deleted on last commit
+
+commit f8b481dce8d53633b89c96b717ae23c0bf9bdb9a
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 13:48:39 2011 -0700
+
+    changed the way a request is loaded in the osurd_request function
+
+commit ac490a7d21f93068030fb837aac67c002fb186cd
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 13:20:30 2011 -0700
+
+    Removed HDIO_GETGEO cmd from ioctl function
+
+commit 26f6207b6cb0645130d2b7a5b62afb287daf1a62
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 13:01:18 2011 -0700
+
+    Added printk statements in osurd_request to makesure I understand what our code is doing
+
+commit 92bc11919fb06e984ee1f5f5a07895b8e7088a32
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 12:41:17 2011 -0700
+
+    Fixed the assignment of the geostruct so it is properly initialized
+
+commit 57db4dcc0d37669a8e318a3580a6571b85123589
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 12:37:45 2011 -0700
+
+    testing syntax in osurd_gitgeo to see check coding standards
+
+commit 6cc3b1d865738729d59acde47fc2561437c470d2
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 12:33:52 2011 -0700
+
+    had to derefrence geometry struct in osurd_getgeo
+
+commit f4bd6419c0ad1b4982a1e996c99bc9a62f645a15
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 12:30:03 2011 -0700
+
+    removed some blatant errors in osurd_getgeo
+
+commit e35df13b305703faa4f27535414f1b2a21b4067a
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Wed Jun 1 12:25:11 2011 -0700
+
+    add a getgeo function to osurd_ops and wrote function
+
+commit a0c4766ef107b541f3f7ce134bf5198f4b1fc78c
+Author: cs411 <cs411@cs411vm.(none)>
+Date:   Wed Jun 1 11:52:43 2011 -0700
+
+    added some appropriate help info in the Kconfig file
+
+commit 84fedbc8ce2d7e09a71f1abb1a277ffc1fe2f5f0
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 31 18:14:54 2011 -0700
+
+    removed the (hopefully) last refrence to sbull and replace with osurd
+
+commit fb4ffa739b122942b994e32b051e988bd8c0fd3f
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 31 18:10:37 2011 -0700
+
+    removed linux/config.h
+
+commit 9559fcd048b28db7fcbaefadea02a5cb119cdbfb
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 31 18:07:58 2011 -0700
+
+    included <linux/config.h>
+
+commit f3cbc950fd03936af02b14a42b3a853d78cfc91c
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 31 18:01:02 2011 -0700
+
+    continued fixing spelling errors in osurd.c
+
+commit 41eca810f167524b44ac50df437d3eeca0908620
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 31 17:56:55 2011 -0700
+
+    continued fixing spelling errors in osurd.c
+
+commit 9b5e25978c2a905aa0f236e2344828044009e1d5
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 31 17:46:29 2011 -0700
+
+    Fixed even more compile errors (Updated calls to API (bio_cur_sectors changed to bio_dur_bytes()>>9) and some spelling errors.  Moved ioctl above block_device_ops declerations)
+
+commit 3778221a260c3519538aaa53460b0f788a87d1e8
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 31 17:32:29 2011 -0700
+
+    Fixed some more compile errors
+
+commit 34434759f59df587543621f0f2a0f821e5699683
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 31 17:24:20 2011 -0700
+
+    Fixed some compile errors
+
+commit 93a914f295fbd94fad062935c950cca5c7579cc2
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 31 16:57:13 2011 -0700
+
+    Fixed minor syntax error.
+
+commit b70ab82e20b234c2cca407897b318658abc82cf6
+Merge: 9b27835... 6cb1c17...
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 31 16:50:54 2011 -0700
+
+    Merge remote branch 'origin' into osurd
+
+commit 9b2783516a04bdf3bf841ee4dde48badccfa2470
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Tue May 31 16:50:12 2011 -0700
+
+    added init and exit function for our ramdisk
+
+commit 6cb1c170ead8cf0880a407587eeb31002aca55ab
+Author: Tyler Howe <howet@onid.orst.edu>
+Date:   Tue May 31 16:48:30 2011 -0700
+
+    Fixed syntax errors, some open/close issues, and added in/revalidate functions
+
+commit b48d50969cc9abf7f99f36bd54727a6854bec511
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Mon May 30 19:31:57 2011 -0700
+
+    Added some stuff to osurd.c from the website
+
+commit f18edeb5c2c7be20574aa97190c1120eae1cf2a7
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Mon May 30 18:57:40 2011 -0700
+
+    copied source from http://www.cs.fsu.edu/~baker/devices/lxr/http/source/lld-examples/sbull/sbull.c ------>>  Only copied till open function
+
+commit 972b1e923ef2d1c67d94955e135b88fc3805d11d
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Mon May 30 17:46:25 2011 -0700
+
+    created osurd.c for our ram disk driver
+
+commit 9eb5785372169019021592895bd3de6ba29f7fd3
+Author: Robert Hickman <liquidnitro28@gmail.com>
+Date:   Mon May 30 17:28:42 2011 -0700
+
+    made osurd.c and edited Kconfig and Makefile
+
+commit 0c3d151af5e7f93bc70536855fde7541a3ed0b72
+Author: Luke Nava <luke.nava@gmail.com>
+Date:   Mon May 16 17:11:34 2011 -0700
+
+    Added files need for complete vanilla kernel
+
+commit 913784dabdea6cb4b451e6082763dc1c516987a3
+Author: Lucas Nava <luke.nava@gmail.com>
+Date:   Thu May 12 15:55:51 2011 -0700
+
+    The vanilla kernel 2.6.34.7
