@@ -125,14 +125,12 @@ static void osurd_transfer(struct osurd_dev *dev, unsigned long sector,
 	printk("dir:%u\n DATA IN:\n",write);
 	
 	if (write){
-		osurd_encrypt(buffer, nbytes, write); /* encrypt */
-		printk("dir:%u\n DATA ENC %lu:\n",write,nbytes);
+		//osurd_encrypt(buffer, nbytes, write); /* encrypt */
 		memcpy(dev->data + offset, buffer, nbytes);
 	}
 	else{
 		memcpy(buffer, dev->data+offset, nbytes);
-		osurd_encrypt(buffer, nbytes, write); /* decrypt */
-                printk("dir:%u\n DATA DEC %lu\n",write,nbytes);
+		//osurd_encrypt(buffer, nbytes, write); /* decrypt */
 	}
 }
 
@@ -158,10 +156,7 @@ static void osurd_encrypt(char *data, int len, int enc)
 static void osurd_request(struct request_queue *q)
 {
 	struct request *req;
-	//int req_size;
 	
-	printk( KERN_NOTICE "Beginning request...\n");
-
 	req = blk_fetch_request(q);
 	
 	while (req != NULL) {
@@ -171,30 +166,13 @@ static void osurd_request(struct request_queue *q)
 			__blk_end_request_all(req, -EIO);
 			continue;
 		}
-	
 
-		//req_size = blk_rq_cur_sectors(req)*KERNEL_SECTOR_SIZE;
-
-		/* Debuggin printk statements */
 		printk(KERN_NOTICE "Req dev: %d\ndir: %ld\nsector: %llu\nnr: %llu\n-------\n",
 					 dev-Devices, rq_data_dir(req), blk_rq_pos(req), 
 						blk_rq_sectors(req));
-		/* End of debugging output */
-
-		//if(rq_data_dir(req)){
-                	
-			//osurd_encrypt(req->buffer, req_size, 1); /* encrypt */ 
-
-	//		osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
-	//			req->buffer, rq_data_dir(req));
-	//        } else {
-			osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
-				req->buffer, rq_data_dir(req));
+		osurd_transfer(dev, blk_rq_pos(req), blk_rq_cur_sectors(req),
+			req->buffer, rq_data_dir(req));
                         
-			//osurd_encrypt(req->buffer, req_size, 0); /* decrypt */
-			
-	//	}
-
 		if( !__blk_end_request_cur(req, 0))
 			req = blk_fetch_request(q);
 
@@ -463,6 +441,7 @@ static int __init osurd_init(void)
 {
 	int i;
 
+	/* Modify nsectors based on disksize */
 	nsectors = disksize/hardsect_size;	
 	if(disksize%hardsect_size != 0)
 		nsectors++;
