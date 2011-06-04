@@ -28,7 +28,7 @@
 #include <linux/errno.h>	/* error codes */
 #include <linux/types.h>	/* size_t */
 #include <linux/fcntl.h>	/* O_ACCMODE */
-//#include <linux/hdreg.h>	/* HDIO_GETGEO */
+#include <linux/hdreg.h>	/* HDIO_GETGEO */
 #include <linux/kdev_t.h>
 #include <linux/vmalloc.h>
 #include <linux/genhd.h>
