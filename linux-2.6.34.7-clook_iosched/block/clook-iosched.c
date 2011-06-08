@@ -8,6 +8,8 @@
 #include <linux/slab.h>
 #include <linux/init.h>
 
+static int clook_queue_empty(struct request_queue *q);
+
 
 struct clook_data {
 	struct list_head queue;
@@ -25,6 +27,7 @@ static int clook_dispatch(struct request_queue *q, int force)
 {
 	struct clook_data *cd = q->elevator->elevator_data;
 
+	printk("[CLOOK dsp <%c> <%llu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long long)blk_rq_pos(rq));
 	if (!list_empty(&cd->queue)) {
 		struct request *rq;
 		rq = list_entry(cd->queue.next, struct request, queuelist);
@@ -47,6 +50,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 	sector_t req_pos = blk_rq_pos(rq);/* Holds the position of the current request */
 	sector_t cur_pos = cd->cur_pos; /* Where the head currently is */ 
 
+	printk("[CLOOK] add <%c> <%llu>\n", rq_data_dir(rq) ? 'W' : 'R', (unsigned long long)req_pos);
 	if(req_pos > cur_pos){
 		if( clook_queue_empty(&cd->queue))
 			list_add( &rq->queuelist, &cd->queue);
@@ -61,7 +65,7 @@ static void clook_add_request(struct request_queue *q, struct request *rq)
 		if( clook_queue_empty( &cd->nextq) )
 			list_add( &rq->queuelist, &cd->nextq );
 		else{
-			list_for_each(entry, &cd->queu, queuelist){
+			list_for_each(entry, &cd->queue, queuelist){
 				cur_pos = blk_rq_pos(entry);
 				if(cur_pos == NULL || cur_pos < req_pos)
 					list_add( &(rq->queuelist), &(entry->queuelist.prev) );
